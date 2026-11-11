@@ -1,8 +1,6 @@
 (function(){
   'use strict';
 
-  var WA_NUMBER = '6285212690901';
-  var WA_DISPLAY = '+62 852-1269-0901';
   var DRAFT_KEY = 'instrumen-pm-asrama-draft-v1';
   var TTD_TETAP = {
     penanggung: 'Martin Hamonangan',
@@ -423,55 +421,10 @@
 
   /* ---------- WHATSAPP ---------- */
   function buildWaText(){
-    var s = collect();
-    var id = s.identitas;
-    var filled = 0, total = 0;
-    var lines = [];
-
-    lines.push('*INSTRUMEN EVALUASI & PERKEMBANGAN PM DI ASRAMA*');
-    lines.push('Sentra Handayani Jakarta');
-    lines.push('');
-    lines.push('*I. IDENTITAS*');
-    lines.push('Nama PM: ' + (id.nama || '-'));
-    lines.push('Asrama: ' + (id.asrama || '-'));
-    lines.push('Tanggal Masuk: ' + (formatDateID(id.masuk) || '-'));
-    lines.push('Pengasuh Asrama: ' + (id.pengasuh || '-'));
-    lines.push('Pekerja Sosial: ' + (id.peksos || '-'));
-    lines.push('Klaster PM: ' + (id.klaster || '-'));
-    lines.push('Periode Penilaian: ' + (id.bulan || '-') + (id.tahun ? ' ' + id.tahun : ''));
-    lines.push('');
-    lines.push('*II. EVALUASI PERKEMBANGAN*');
-
-    INDIKATOR.forEach(function(ind, idx){
-      var v = s.nilai[ind.key] || 0;
-      var sk = SKALA.filter(function(x){ return x.nilai === v; })[0];
-      if(v > 0){ filled++; total += v; }
-      lines.push((idx + 1) + '. ' + ind.nama + ': ' + (v > 0 ? '*' + v + '* (' + sk.label + ')' : '_belum dinilai_'));
-      if(s.catatan[ind.key]) lines.push('   _Catatan: ' + s.catatan[ind.key] + '_');
-    });
-
-    var avg = filled > 0 ? total / filled : 0;
-    lines.push('');
-    lines.push('*Total: ' + total + '/40 | Rata-rata: ' + avg.toFixed(2) + (filled > 0 ? ' | Predikat: ' + predikatOf(avg).label : '') + '*');
-
-    lines.push('');
-    lines.push('*III. LAYANAN YANG SUDAH DIBERIKAN*');
-    if(s.layanan.length === 0){
-      lines.push('- Belum ada layanan yang dicentang');
-    } else {
-      s.layanan.forEach(function(item){ lines.push('- ' + item); });
-    }
-
-    lines.push('');
-    lines.push('*IV. KESIMPULAN & REKOMENDASI*');
-    lines.push('Keberfungsian: ' + (s.keberfungsian.length ? s.keberfungsian.join(', ') : '-'));
-    lines.push('Tindak lanjut: ' + (s.tindakLanjut.length ? s.tindakLanjut.join(', ') : '-'));
-    if(s.catatanTambahan) lines.push('Catatan: ' + s.catatanTambahan);
-
-    lines.push('');
-    lines.push('_Dikirim dari Form Instrumen Perkembangan PM - Sentra Handayani._');
-
-    return lines.join('\n');
+    var id = collect().identitas;
+    return 'Pengasuh: ' + (id.pengasuh || '-') + '\n' +
+      'PM: ' + (id.nama || '-') + '\n' +
+      'Periode Penilaian: ' + (id.bulan || '-') + (id.tahun ? ' ' + id.tahun : '');
   }
 
   function sendWhatsApp(){
@@ -481,9 +434,9 @@
       els.inNama.focus();
       return;
     }
-    var url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildWaText());
+    var url = 'https://wa.me/?text=' + encodeURIComponent(buildWaText());
     window.open(url, '_blank', 'noopener');
-    toast('Membuka WhatsApp ' + WA_DISPLAY + '. Lampirkan file PDF pada chat.', 'ok', 6000);
+    toast('Membuka WhatsApp. Pilih grup atau chat tujuan, lalu lampirkan file PDF.', 'ok', 6000);
   }
 
   function copySummary(){
@@ -554,7 +507,7 @@
   function askWhatsApp(){
     confirmDialog({
       title: 'PDF selesai diekspor',
-      message: 'Lampirkan file PDF yang baru disimpan ke chat WhatsApp, lalu kirim ke ' + WA_DISPLAY + '.\n\nBuka WhatsApp sekarang?',
+      message: 'Lampirkan file PDF yang baru disimpan ke chat atau grup WhatsApp tujuan.\n\nBuka WhatsApp sekarang?',
       okLabel: 'Buka WhatsApp',
       cancelLabel: 'Nanti'
     }).then(function(ok){ if(ok) sendWhatsApp(); });
