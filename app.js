@@ -148,7 +148,9 @@
         masuk: els.inMasuk.value,
         pengasuh: els.inPengasuh.value.trim(),
         peksos: els.inPeksos.value.trim(),
-        klaster: els.inKlaster.value.trim()
+        klaster: els.inKlaster.value.trim(),
+        bulan: els.inBulan.value,
+        tahun: els.inTahun.value.trim()
       },
       nilai: nilai,
       catatan: catatan,
@@ -199,6 +201,8 @@
     els.inPengasuh.value = id.pengasuh || '';
     els.inPeksos.value = id.peksos || '';
     els.inKlaster.value = id.klaster || '';
+    els.inBulan.value = id.bulan || '';
+    els.inTahun.value = id.tahun || '';
 
     INDIKATOR.forEach(function(ind){
       var v = d.nilai && d.nilai[ind.key] ? String(d.nilai[ind.key]) : '';
@@ -347,7 +351,11 @@
     var ttdPenanggung = signatureName(s.ttd.penanggung, '');
     var ttdKapokja = signatureName(s.ttd.kapokja, '');
 
+    var periodeBulan = id.bulan ? esc(id.bulan) : '__________';
+    var periodeTahun = id.tahun ? esc(id.tahun) : '__________';
+
     return '' +
+      '<div class="ps-periode">Bulan: ' + periodeBulan + ' &nbsp;&nbsp;&nbsp; Tahun: ' + periodeTahun + '</div>' +
       '<div class="ps-title">INSTRUMEN EVALUASI &amp; PERKEMBANGAN PENERIMA MANFAAT (PM) di ASRAMA</div>' +
 
       '<p class="ps-h">I. Identitas Penerima Manfaat &amp; Petugas</p>' +
@@ -430,6 +438,7 @@
     lines.push('Pengasuh Asrama: ' + (id.pengasuh || '-'));
     lines.push('Pekerja Sosial: ' + (id.peksos || '-'));
     lines.push('Klaster PM: ' + (id.klaster || '-'));
+    lines.push('Periode Penilaian: ' + (id.bulan || '-') + (id.tahun ? ' ' + id.tahun : ''));
     lines.push('');
     lines.push('*II. EVALUASI PERKEMBANGAN*');
 
@@ -664,7 +673,7 @@
     });
 
     document.addEventListener('input', function(e){
-      if(e.target.matches('textarea, input[type="text"], input[type="date"]')){
+      if(e.target.matches('textarea, input[type="text"], input[type="date"], input[type="number"], select')){
         updateSummary();
         scheduleSave();
         scheduleSheet();
@@ -718,6 +727,8 @@
       inPengasuh: $('in-pengasuh'),
       inPeksos: $('in-peksos'),
       inKlaster: $('in-klaster'),
+      inBulan: $('in-bulan'),
+      inTahun: $('in-tahun'),
       inCatatan: $('in-catatan'),
 
       ttdPengasuh: $('ttd-pengasuh'),
@@ -774,6 +785,11 @@
     bindEvents();
 
     var restored = restoreDraft();
+
+    var now = new Date();
+    var NAMA_BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    if(!els.inBulan.value) els.inBulan.value = NAMA_BULAN[now.getMonth()];
+    if(!els.inTahun.value) els.inTahun.value = String(now.getFullYear());
     updateSummary();
     refreshPrintSheet();
 
