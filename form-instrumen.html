@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Form Instrumen Perkembangan PM - Sentra Handayani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --ink:#0f172a;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --brand:#4338ca;
+  --brand-600:#4f46e5;
+  --brand-700:#4338ca;
+  --brand-50:#eef2ff;
+  --gold:#f59e0b;
+  --green:#16a34a;
+  --green-600:#15803d;
+  --r1:#e11d48;
+  --r2:#f59e0b;
+  --r3:#0284c7;
+  --r4:#059669;
+  --radius:18px;
+  --shadow:0 1px 2px rgba(15,23,42,.05), 0 18px 40px -24px rgba(15,23,42,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 520px at 100% -10%, #e0e7ff 0%, rgba(224,231,255,0) 62%),
+    radial-gradient(900px 480px at -10% 30%, #fef3c7 0%, rgba(254,243,199,0) 55%),
+    var(--bg);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit}
+a{color:inherit}
+body.modal-open{overflow:hidden}
+
+/* ---------- HEADER ---------- */
+.site-head{
+  background:linear-gradient(135deg,#0b1220 0%,#171554 52%,#312e81 100%);
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.site-head::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(600px 240px at 82% 0%, rgba(129,140,248,.35), transparent 70%),
+    radial-gradient(420px 200px at 8% 120%, rgba(245,158,11,.22), transparent 70%);
+  pointer-events:none;
+}
+.head-inner{
+  position:relative; z-index:1;
+  max-width:1400px; margin:0 auto;
+  padding:20px 24px;
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:16px; min-width:0; flex:1}
+.brand-logo{
+  flex:none; width:58px; height:58px; border-radius:16px;
+  background:#fff; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 24px -10px rgba(0,0,0,.65);
+  padding:6px;
+}
+.brand-logo img{max-width:100%; max-height:100%; object-fit:contain; display:block}
+.brand-kicker{
+  margin:0 0 3px; font-size:11px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:#c7d2fe;
+}
+.brand h1{
+  margin:0; font-size:21px; line-height:1.2; font-weight:800; letter-spacing:-.01em;
+}
+.brand-sub{margin:4px 0 0; font-size:12.5px; color:#cbd5e1}
+.head-status{
+  display:flex; align-items:center; gap:8px;
+  padding:8px 14px; border-radius:999px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.16);
+  font-size:12px; font-weight:600; color:#e2e8f0;
+  backdrop-filter:blur(6px);
+  white-space:nowrap;
+}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+.status-dot.is-saving{background:#fbbf24;box-shadow:0 0 0 4px rgba(251,191,36,.16)}
+
+/* ---------- LAYOUT ---------- */
+.app-main{max-width:1400px;margin:0 auto;padding:22px 24px 40px}
+.hint-bar{
+  display:flex; align-items:center; gap:10px;
+  background:#fff; border:1px solid rgba(15,23,42,.06);
+  border-radius:14px; padding:12px 16px; margin-bottom:20px;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);
+  font-size:13px; color:#475569;
+}
+.hint-bar svg{flex:none; color:var(--brand-600)}
+.hint-bar b{color:var(--ink)}
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 348px;
+  gap:22px;
+  align-items:start;
+}
+.form-col{display:flex; flex-direction:column; gap:20px; min-width:0}
+.side-col{display:flex; flex-direction:column; gap:18px; position:sticky; top:20px}
+
+/* ---------- CARDS ---------- */
+.card{
+  background:var(--card);
+  border:1px solid rgba(15,23,42,.06);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-head{
+  display:flex; align-items:center; gap:14px;
+  padding:16px 20px;
+  border-bottom:1px solid #eef2f7;
+  background:linear-gradient(180deg,#fbfcfe,#fff);
+}
+.step{
+  flex:none; width:36px; height:36px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--brand-50); color:var(--brand-700);
+  font-weight:800; font-size:13px; letter-spacing:.02em;
+}
+.card-head h2{margin:0; font-size:15.5px; font-weight:800; letter-spacing:-.01em}
+.card-head p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+.card-body{padding:18px 20px 20px}
+.mini-progress{margin-left:auto; display:flex; align-items:center; gap:9px; flex:none}
+.mini-progress span{font-size:12px; font-weight:800; color:var(--brand-700); font-variant-numeric:tabular-nums}
+.mini-bar{width:88px; height:7px; border-radius:999px; background:#e9edf5; overflow:hidden}
+.mini-bar i{display:block; height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg,#6366f1,#8b5cf6); transition:width .25s ease}
+
+/* ---------- FIELDS ---------- */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px 18px}
+.field{display:flex; flex-direction:column; gap:6px; min-width:0}
+.field label{font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#64748b}
+.field .req{color:var(--r1)}
+.field input, .field select{
+  width:100%; padding:11px 12px;
+  border:1px solid var(--line); border-radius:11px;
+  background:#fff; color:var(--ink);
+  font-family:inherit; font-size:13.5px;
+  transition:border-color .15s, box-shadow .15s;
+}
+.field input::placeholder{color:#94a3b8}
+.field input:focus, .field select:focus, textarea:focus{
+  outline:none; border-color:#818cf8;
+  box-shadow:0 0 0 4px rgba(99,102,241,.14);
+}
+
+/* ---------- INDICATORS ---------- */
+.indicators{display:flex; flex-direction:column}
+.ind-row{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) 196px minmax(0,1.05fr);
+  gap:14px;
+  padding:15px 0;
+  border-bottom:1px dashed #e6ebf3;
+}
+.ind-row:last-child{border-bottom:none; padding-bottom:4px}
+.ind-no{
+  width:28px; height:28px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  background:#f1f5f9; color:#64748b; font-weight:800; font-size:12px;
+  margin-top:2px;
+}
+.ind-row.is-scored .ind-no{background:var(--brand-50); color:var(--brand-700)}
+.ind-name{margin:0; font-size:13.5px; font-weight:800; line-height:1.35}
+.ind-desc{margin:3px 0 0; font-size:11.5px; line-height:1.45; color:var(--muted)}
+.ind-score{display:flex; flex-direction:column; gap:6px; min-width:0}
+.rating{display:flex; gap:6px}
+.rating label{position:relative; flex:1; cursor:pointer; min-width:0}
+.rating input{position:absolute; opacity:0; width:1px; height:1px; pointer-events:none}
+.rating span{
+  display:flex; align-items:center; justify-content:center;
+  height:38px; border-radius:10px;
+  border:1px solid var(--line); background:#f8fafc; color:#64748b;
+  font-weight:800; font-size:13px;
+  transition:background .15s, border-color .15s, color .15s, transform .1s;
+  user-select:none;
+}
+.rating label:hover span{border-color:#c7d2fe; background:var(--brand-50); color:var(--brand-700)}
+.rating input:focus-visible + span{outline:2px solid #6366f1; outline-offset:2px}
+.rating label:active span{transform:scale(.97)}
+.rating label[data-value="1"] input:checked + span{background:var(--r1); border-color:var(--r1); color:#fff}
+.rating label[data-value="2"] input:checked + span{background:var(--r2); border-color:var(--r2); color:#fff}
+.rating label[data-value="3"] input:checked + span{background:var(--r3); border-color:var(--r3); color:#fff}
+.rating label[data-value="4"] input:checked + span{background:var(--r4); border-color:var(--r4); color:#fff}
+.score-txt{font-size:11px; font-weight:700; color:#94a3b8; min-height:15px}
+.score-txt.is-scored{color:#475569}
+.ind-note textarea{
+  width:100%; min-height:62px; resize:vertical;
+  border:1px solid var(--line); border-radius:10px;
+  padding:9px 10px; font-family:inherit; font-size:12px; line-height:1.45;
+  color:var(--ink); background:#fff;
+  transition:border-color .15s, box-shadow .15s;
+}
+.ind-note textarea::placeholder{color:#a8b3c4}
+
+/* ---------- LEGEND ---------- */
+.legend{
+  margin-top:16px; padding:12px 14px;
+  background:#f8fafc; border:1px dashed #dbe3ef; border-radius:12px;
+  display:grid; grid-template-columns:1fr 1fr; gap:7px 18px;
+}
+.legend-title{
+  grid-column:1 / -1; font-size:10.5px; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; color:#64748b; margin-bottom:1px;
+}
+.legend-item{display:flex; gap:8px; align-items:flex-start; font-size:11.5px; line-height:1.45; color:#475569}
+.legend-num{
+  flex:none; width:20px; height:20px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800; color:#fff;
+}
+.legend-item b{color:var(--ink)}
+.ln1{background:var(--r1)} .ln2{background:var(--r2)} .ln3{background:var(--r3)} .ln4{background:var(--r4)}
+
+/* ---------- CHECK LISTS ---------- */
+.check-list{display:flex; flex-direction:column; gap:8px}
+.check-item{
+  display:flex; align-items:flex-start; gap:11px;
+  padding:11px 13px; border:1px solid var(--line); border-radius:12px;
+  background:#fff; cursor:pointer; transition:border-color .15s, background .15s, box-shadow .15s;
+}
+.check-item:hover{border-color:#c7d2fe; background:#fbfbff}
+.check-item input{
+  appearance:none; -webkit-appearance:none;
+  flex:none; width:19px; height:19px; margin:1px 0 0;
+  border:1.5px solid #cbd5e1; border-radius:6px; background:#fff;
+  cursor:pointer; transition:.15s; position:relative;
+}
+.check-item input:checked{background:var(--brand-600); border-color:var(--brand-600)}
+.check-item input:checked::after{
+  content:""; position:absolute; left:5.5px; top:2px;
+  width:4px; height:9px; border:solid #fff; border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.check-item input:focus-visible{outline:2px solid #6366f1; outline-offset:2px}
+.check-item span{font-size:12.5px; line-height:1.45; color:#334155}
+.check-item:has(input:checked){border-color:#c7d2fe; background:#f5f5ff}
+.radio-list{display:grid; grid-template-columns:1fr; gap:8px}
+.sub-head{
+  margin:16px 0 8px; font-size:11px; font-weight:800; letter-spacing:.05em;
+  text-transform:uppercase; color:#64748b;
+}
+.sub-head:first-child{margin-top:0}
+.opt-badge{
+  margin-left:auto; flex:none;
+  padding:4px 9px; border-radius:999px;
+  background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0;
+  font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+}
+.optional-note{
+  margin:0 0 14px; padding:9px 12px;
+  background:#f8fafc; border:1px dashed #dbe3ef; border-radius:10px;
+  font-size:11.5px; line-height:1.5; color:#64748b;
+}
+
+/* ---------- SIGNATURES ---------- */
+.sign-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 18px}
+.sign-field{display:flex; flex-direction:column; gap:6px}
+.sign-field label{font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#64748b}
+.sign-field input{
+  width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:11px;
+  font-family:inherit; font-size:13.5px; background:#fff;
+}
+.sign-field input:focus{outline:none; border-color:#818cf8; box-shadow:0 0 0 4px rgba(99,102,241,.14)}
+.sign-field input[readonly]{background:#f8fafc; color:#334155; cursor:not-allowed; border-style:dashed}
+.sign-hint{margin:12px 0 0; font-size:11.5px; color:var(--muted); line-height:1.5}
+
+/* ---------- SIDEBAR ---------- */
+.score-card{padding:18px}
+.score-top{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px}
+.score-top h3{margin:0; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#64748b}
+.segments{display:flex; gap:4px; margin-bottom:16px}
+.segments i{flex:1; height:7px; border-radius:99px; background:#e9edf5; transition:background .2s}
+.segments i.f1{background:var(--r1)} .segments i.f2{background:var(--r2)}
+.segments i.f3{background:var(--r3)} .segments i.f4{background:var(--r4)}
+.score-main{display:flex; align-items:baseline; gap:6px}
+.score-main strong{font-size:42px; line-height:1; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.score-main span{font-size:16px; font-weight:700; color:#94a3b8}
+.score-sub{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; font-size:12.5px; color:#475569}
+.score-sub b{font-variant-numeric:tabular-nums; color:var(--ink)}
+.badge{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 10px; border-radius:999px;
+  font-size:11px; font-weight:800; letter-spacing:.01em;
+  background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0;
+  white-space:nowrap;
+}
+.badge.tone-rose{background:#fff1f2; color:#be123c; border-color:#fecdd3}
+.badge.tone-amber{background:#fffbeb; color:#b45309; border-color:#fde68a}
+.badge.tone-sky{background:#f0f9ff; color:#0369a1; border-color:#bae6fd}
+.badge.tone-emerald{background:#ecfdf5; color:#047857; border-color:#a7f3d0}
+.low-box{margin-top:14px; padding-top:13px; border-top:1px dashed #e2e8f0; font-size:11.5px; line-height:1.5; color:#64748b}
+.low-box strong{color:var(--ink)}
+.low-box ul{margin:6px 0 0; padding-left:16px}
+.low-box li{margin:2px 0}
+
+.actions-card{padding:16px}
+.btn{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  width:100%; padding:12px 14px; border-radius:12px;
+  font-size:13.5px; font-weight:700; cursor:pointer;
+  border:1px solid transparent; background:#fff; color:var(--ink);
+  transition:transform .1s, background .15s, border-color .15s, box-shadow .15s;
+  text-decoration:none;
+}
+.btn:active{transform:translateY(1px)}
+.btn svg{flex:none}
+.btn-primary{background:var(--brand-600); color:#fff; box-shadow:0 10px 22px -12px rgba(79,70,229,.9)}
+.btn-primary:hover{background:var(--brand-700)}
+.btn-wa{background:#1fa855; color:#fff; box-shadow:0 10px 22px -12px rgba(22,163,74,.9)}
+.btn-wa:hover{background:#15803d}
+.btn-soft{background:#f8fafc; border-color:var(--line); color:#334155}
+.btn-soft:hover{background:#f1f5f9; border-color:#cbd5e1}
+.btn-row{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px}
+.btn-sm{padding:9px 10px; font-size:12.5px}
+.btn-danger{color:#b91c1c; background:#fff; border-color:#fee2e2}
+.btn-danger:hover{background:#fef2f2; border-color:#fecaca}
+.action-note{margin:11px 0 0; font-size:11px; line-height:1.5; color:var(--muted); text-align:center}
+
+.wa-card{padding:16px 18px; background:linear-gradient(180deg,#f0fdf4,#fff); border-color:#dcfce7}
+.wa-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+.wa-ico{
+  flex:none; width:34px; height:34px; border-radius:11px;
+  background:#dcfce7; color:#15803d; display:flex; align-items:center; justify-content:center;
+}
+.wa-head h3{margin:0; font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#166534}
+.wa-number{margin:0; font-size:15px; font-weight:800; letter-spacing:.01em; color:#14532d; font-variant-numeric:tabular-nums}
+.wa-steps{margin:10px 0 0; padding-left:17px; font-size:11.5px; line-height:1.55; color:#3f6212}
+.wa-steps li{margin:2px 0}
+.link-copy{
+  margin-top:10px; padding:0; border:none; background:none;
+  font-size:11.5px; font-weight:700; color:#15803d; cursor:pointer; text-decoration:underline;
+}
+.foot-note{margin:0; padding:0 4px; font-size:11px; color:#94a3b8; text-align:center; line-height:1.5}
+
+/* ---------- MOBILE BAR ---------- */
+.mobile-bar{
+  display:none;
+  position:fixed; left:0; right:0; bottom:0; z-index:60;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.94);
+  border-top:1px solid var(--line);
+  backdrop-filter:blur(12px);
+  box-shadow:0 -10px 30px -18px rgba(15,23,42,.4);
+}
+.mobile-bar .inner{display:grid; grid-template-columns:1fr 1fr; gap:9px; max-width:640px; margin:0 auto}
+
+/* ---------- MODALS ---------- */
+.modal{
+  position:fixed; inset:0; z-index:120;
+  display:flex; align-items:center; justify-content:center;
+  padding:18px;
+  background:rgba(15,23,42,.55);
+  backdrop-filter:blur(4px);
+}
+.modal[hidden]{display:none}
+.modal-box{
+  background:#fff; border-radius:20px; width:100%; max-width:460px;
+  box-shadow:0 40px 80px -30px rgba(2,6,23,.6);
+  padding:24px; animation:pop .18s ease-out;
+}
+@keyframes pop{from{opacity:0; transform:translateY(8px) scale(.985)} to{opacity:1; transform:none}}
+.modal-title{display:flex; align-items:center; gap:10px; margin:0 0 8px; font-size:16px; font-weight:800}
+.modal-msg{margin:0 0 20px; font-size:13px; line-height:1.6; color:#475569; white-space:pre-line}
+.modal-actions{display:grid; grid-template-columns:1fr 1fr; gap:9px}
+.modal-actions.single{grid-template-columns:1fr}
+
+.preview-box{
+  max-width:900px; padding:0; display:flex; flex-direction:column;
+  max-height:92vh; overflow:hidden;
+}
+.preview-head{
+  display:flex; align-items:center; gap:12px;
+  padding:14px 18px; border-bottom:1px solid var(--line);
+}
+.preview-head h2{margin:0; font-size:14.5px; font-weight:800}
+.preview-head p{margin:1px 0 0; font-size:11.5px; color:var(--muted)}
+.icon-btn{
+  margin-left:auto; flex:none; width:34px; height:34px; border-radius:10px;
+  border:1px solid var(--line); background:#fff; color:#475569;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.icon-btn:hover{background:#f8fafc}
+.preview-body{
+  overflow:auto; padding:18px; background:#eef2f7;
+  -webkit-overflow-scrolling:touch;
+}
+.preview-foot{
+  display:flex; gap:9px; padding:12px 18px; border-top:1px solid var(--line); background:#fff;
+}
+.preview-foot .btn{width:auto; flex:1}
+.preview-foot .btn-primary{flex:1.4}
+.ps-wrap{position:relative; margin:0 auto; max-width:794px}
+
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translate(-50%,14px);
+  z-index:200; max-width:min(92vw,460px);
+  display:flex; align-items:center; gap:10px;
+  background:#0f172a; color:#e2e8f0;
+  padding:12px 16px; border-radius:12px;
+  font-size:12.5px; font-weight:600; line-height:1.4;
+  opacity:0; pointer-events:none;
+  transition:opacity .2s, transform .2s;
+  box-shadow:0 20px 40px -20px rgba(2,6,23,.9);
+}
+.toast.show{opacity:1; transform:translate(-50%,0); pointer-events:auto}
+.toast .toast-action{
+  margin-left:6px; padding:4px 9px; border-radius:8px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.2);
+  color:#fff; font-size:11.5px; font-weight:800; cursor:pointer; white-space:nowrap;
+}
+.toast.warn{background:#7c2d12}
+.toast.ok{background:#14532d}
+
+/* =========================================================
+   PRINT SHEET (A4) — mengikuti format PDF instrumen
+   ========================================================= */
+#print-sheet{display:none}
+.ps{
+  width:210mm; min-height:297mm;
+  padding:12mm 13mm;
+  background:#fff; color:#000;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:8pt; line-height:1.28;
+  box-sizing:border-box;
+}
+.ps *{box-sizing:border-box}
+.ps p{margin:0}
+.ps-title{
+  text-align:center; font-size:11.4pt; font-weight:bold;
+  letter-spacing:.2pt; margin:0 0 9pt;
+}
+.ps .ps-h{
+  font-size:9pt; font-weight:bold; text-decoration:underline;
+  text-underline-offset:1.5pt; margin:8pt 0 4pt;
+}
+.ps-ident{width:100%; border-collapse:collapse; font-size:8pt; table-layout:fixed}
+.ps-ident td{padding:1.4pt 0; vertical-align:top}
+.ps-ident .k{width:20%; white-space:nowrap}
+.ps-ident .c{width:2%}
+.ps-ident .v{width:25%; padding-right:6pt; word-break:break-word}
+.ps-ident .k2{width:23%; white-space:nowrap; padding-left:4pt}
+.ps-ident .v2{width:28%; word-break:break-word}
+.ps-table{width:100%; border-collapse:collapse; table-layout:fixed; font-size:7.3pt}
+.ps-table th, .ps-table td{border:.6pt solid #000; padding:2.2pt 3pt; vertical-align:top}
+.ps-table thead th{background:#ededed; text-align:center; font-size:7.1pt; font-weight:bold; padding:2.6pt 2pt}
+.ps-col-no{width:6%}
+.ps-col-nilai{width:21%}
+.ps-col-catatan{width:27%}
+.ps-no{text-align:center}
+.ps-ind-name{font-weight:bold; font-size:7.4pt; line-height:1.2}
+.ps .ps-ind-desc{font-size:6.7pt; line-height:1.2; margin-top:.8pt}
+.ps-nilai{text-align:center; white-space:nowrap}
+.ps-nbox{
+  display:inline-block; width:13pt; height:12pt; line-height:11.4pt;
+  border:.6pt solid #000; text-align:center; font-size:6.8pt;
+  margin:0 1.2pt; vertical-align:middle;
+}
+.ps-nbox.on{background:#000; color:#fff; font-weight:bold}
+.ps-catatan{font-size:6.8pt; line-height:1.25}
+.ps-legend{margin-top:3.5pt; font-size:6.3pt; line-height:1.32}
+.ps-legend-title{font-size:7.2pt; font-weight:bold; margin-bottom:1pt}
+.ps .ps-legend p{padding-left:8pt; text-indent:-8pt; margin-bottom:.7pt}
+.ps-checks{font-size:7.6pt; line-height:1.4; margin-left:10pt}
+.ps-check{display:flex; align-items:flex-start; gap:4pt; margin-bottom:1.8pt}
+.ps-box{
+  flex:none; display:inline-flex; align-items:center; justify-content:center;
+  width:8.2pt; height:8.2pt; border:.6pt solid #000;
+  font-size:6.4pt; line-height:1; margin-top:.5pt;
+}
+.ps .ps-sub{font-size:7.8pt; font-weight:bold; margin:5pt 0 2.5pt}
+.ps-sign{width:100%; border-collapse:collapse; margin-top:12pt; font-size:7.8pt; table-layout:fixed}
+.ps-sign td{width:50%; padding:0 0 12pt; vertical-align:bottom}
+.ps-sign-row{display:flex; align-items:baseline}
+.ps-sign .role{flex:0 0 45%; white-space:nowrap; padding-right:4pt}
+.ps-sign .name{flex:1; text-align:center; padding-left:2pt}
+
+@media (max-width:1180px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side-col{position:static; display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .foot-note{grid-column:1 / -1}
+  .ind-row{grid-template-columns:32px minmax(0,1fr) 188px}
+  .ind-note{grid-column:2 / 4}
+}
+@media (max-width:900px){
+  .head-inner{padding:16px 18px}
+  .app-main{padding:16px 16px 30px}
+  .brand h1{font-size:17px}
+  .brand-sub{display:none}
+  .brand-logo{width:48px; height:48px; border-radius:13px}
+  .head-status{font-size:11px; padding:7px 11px}
+  .layout{gap:16px}
+  .form-col{gap:16px}
+  .side-col{grid-template-columns:1fr}
+  .mobile-bar{display:block}
+  body{padding-bottom:76px}
+  .grid-2{grid-template-columns:1fr}
+  .sign-grid{grid-template-columns:1fr}
+  .legend{grid-template-columns:1fr}
+  .ind-row{grid-template-columns:28px minmax(0,1fr); gap:10px}
+  .ind-score{grid-column:2; max-width:280px}
+  .ind-note{grid-column:2}
+  .card-body{padding:16px}
+  .card-head{padding:14px 16px; gap:11px}
+  .step{width:32px; height:32px; border-radius:10px; font-size:12px}
+  .preview-body{padding:10px}
+  .toast{bottom:86px}
+  .score-card{padding:16px}
+}
+@media (max-width:420px){
+  .rating span{height:36px}
+  .score-main strong{font-size:36px}
+}
+
+/* ---------- PRINT ---------- */
+@media print{
+  @page{size:A4; margin:12mm 13mm 10mm}
+  html,body{background:#fff !important; padding:0 !important; margin:0 !important}
+  body > *{display:none !important}
+  body > #print-sheet{display:block !important}
+  #print-sheet .ps{
+    width:auto; min-height:0; padding:0; margin:0;
+    font-size:8pt;
+  }
+  .ps-table tr, .ps-sign, .ps-legend, .ps-checks{break-inside:avoid; page-break-inside:avoid}
+  .ps-table thead{display:table-header-group}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="head-inner">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="LOGO%20KEMENSOS%20-%207.png" alt="Logo Kementerian Sosial" onerror="this.style.display='none'">
+      </div>
+      <div>
+        <p class="brand-kicker">Kementerian Sosial RI &middot; Sentra Handayani Jakarta</p>
+        <h1>Instrumen Evaluasi &amp; Perkembangan PM di Asrama</h1>
+        <p class="brand-sub">Form pengisian digital &middot; ekspor PDF &middot; kirim WhatsApp</p>
+      </div>
+    </div>
+    <div class="head-status">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="save-status">Draft tersimpan otomatis</span>
+    </div>
+  </div>
+</header>
+
+<main class="app-main">
+  <div class="hint-bar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+    <span>Isi nilai <b>1&ndash;4</b> pada setiap aspek, tambahkan catatan bila perlu, lalu <b>Ekspor PDF</b> dan kirim ke WhatsApp <b>+62 852-1269-0901</b>.</span>
+  </div>
+
+  <div class="layout">
+    <div class="form-col">
+
+      <!-- I. IDENTITAS -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">I</span>
+          <div>
+            <h2>Identitas Penerima Manfaat &amp; Petugas</h2>
+            <p>Data dasar PM dan petugas pendamping</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="grid-2">
+            <div class="field">
+              <label for="in-nama">Nama PM <span class="req">*</span></label>
+              <input id="in-nama" type="text" placeholder="Nama lengkap penerima manfaat" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="in-pengasuh">Pengasuh Asrama</label>
+              <input id="in-pengasuh" type="text" placeholder="Nama pengasuh asrama" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="in-asrama">Asrama</label>
+              <input id="in-asrama" type="text" placeholder="Contoh: Asrama Anak Laki-laki" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="in-peksos">Pekerja Sosial</label>
+              <input id="in-peksos" type="text" placeholder="Nama pekerja sosial" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="in-masuk">Tanggal Masuk</label>
+              <input id="in-masuk" type="date">
+            </div>
+            <div class="field">
+              <label for="in-klaster">Klaster PM</label>
+              <input id="in-klaster" type="text" list="klaster-list" placeholder="Pilih atau tulis klaster" autocomplete="off">
+              <datalist id="klaster-list">
+                <option value="ABH"></option>
+                <option value="Korban Ekstrimisme"></option>
+                <option value="SKB"></option>
+                <option value="Korban Penyalahgunaan NAPZA"></option>
+                <option value="ODHIV"></option>
+                <option value="Kelompok Rentan"></option>
+                <option value="Korban Kekerasan Seksual"></option>
+                <option value="Anak Tidak Terdokumentasi"></option>
+                <option value="Korban Bullying"></option>
+                <option value="True Crime Community"></option>
+                <option value="TPPO"></option>
+                <option value="Lanjut Usia"></option>
+              </datalist>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- II. EVALUASI -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">II</span>
+          <div>
+            <h2>Evaluasi Perkembangan PM Asrama</h2>
+            <p>Beri nilai 1&ndash;4 dan catatan perilaku &amp; intervensi</p>
+          </div>
+          <div class="mini-progress">
+            <span id="mini-text">0/10</span>
+            <div class="mini-bar"><i id="mini-bar"></i></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="indicators" id="indicator-list"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+      </section>
+
+      <!-- III. LAYANAN -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">III</span>
+          <div>
+            <h2>Layanan yang Sudah Diberikan</h2>
+            <p>Centang layanan yang sudah diterima PM</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="check-list" id="layanan-list"></div>
+        </div>
+      </section>
+
+      <!-- IV. KESIMPULAN -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">IV</span>
+          <div>
+            <h2>Kesimpulan &amp; Rekomendasi Pekerja Sosial</h2>
+            <p>Tidak wajib diisi &mdash; bagian tetap tercetak pada PDF</p>
+          </div>
+          <span class="opt-badge">Opsional</span>
+        </div>
+        <div class="card-body">
+          <p class="optional-note">Bagian ini boleh dikosongkan. Semua pilihan yang tidak diisi tetap ditampilkan sebagai kotak kosong pada PDF, sesuai format instrumen.</p>
+
+          <p class="sub-head">Tingkat Keberfungsian Sosial saat ini</p>
+          <div class="radio-list" id="keberfungsian-list"></div>
+
+          <p class="sub-head">Rekomendasi tindak lanjut (TL)</p>
+          <div class="radio-list" id="tindak-lanjut-list"></div>
+
+          <p class="sub-head">Catatan tambahan / kesimpulan pengasuh <span style="font-weight:600;text-transform:none;letter-spacing:0;color:#94a3b8">(opsional)</span></p>
+          <div class="field">
+            <textarea id="in-catatan" rows="3" placeholder="Catatan tambahan, kesimpulan, atau hal penting lainnya..."
+              style="width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;color:var(--ink)"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- TANDA TANGAN -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </span>
+          <div>
+            <h2>Nama Penanda Tangan</h2>
+            <p>Nama akan tercetak pada kolom tanda tangan PDF</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sign-grid">
+            <div class="sign-field">
+              <label for="ttd-pengasuh">Pengasuh Asrama</label>
+              <input id="ttd-pengasuh" type="text" placeholder="Otomatis dari nama pengasuh" autocomplete="off">
+            </div>
+            <div class="sign-field">
+              <label for="ttd-peksos">Pekerja Sosial</label>
+              <input id="ttd-peksos" type="text" placeholder="Otomatis dari nama pekerja sosial" autocomplete="off">
+            </div>
+            <div class="sign-field">
+              <label for="ttd-penanggung">Penanggungjawab Pengasuhan</label>
+              <input id="ttd-penanggung" type="text" value="Martin Hamonangan" readonly title="Nama tetap">
+            </div>
+            <div class="sign-field">
+              <label for="ttd-kapokja">Kapokja Residensial</label>
+              <input id="ttd-kapokja" type="text" value="Tuti Nurhayati" readonly title="Nama tetap">
+            </div>
+          </div>
+          <p class="sign-hint">Pengasuh Asrama dan Pekerja Sosial mengikuti nama yang diisi di atas. Penanggungjawab Pengasuhan dan Kapokja Residensial sudah ditetapkan.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="side-col">
+      <section class="card score-card">
+        <div class="score-top">
+          <h3>Ringkasan Penilaian</h3>
+          <span class="badge" id="predikat-badge">Belum dinilai</span>
+        </div>
+        <div class="segments" id="segments"></div>
+        <div class="score-main"><strong id="total-score">0</strong><span>/ 40</span></div>
+        <div class="score-sub">
+          <span>Terisi <b id="filled-count">0</b>/10 aspek</span>
+          <span>Rata-rata <b id="avg-score">0.00</b></span>
+        </div>
+        <div class="low-box" id="low-box">Nilai setiap aspek untuk melihat ringkasan dan aspek yang perlu perhatian.</div>
+      </section>
+
+      <section class="card actions-card">
+        <button type="button" class="btn btn-primary" id="btn-export">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Ekspor PDF
+        </button>
+        <button type="button" class="btn btn-wa" id="btn-wa" style="margin-top:8px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.19-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
+          Kirim ke WhatsApp
+        </button>
+        <div class="btn-row">
+          <button type="button" class="btn btn-soft btn-sm" id="btn-preview">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+            Pratinjau
+          </button>
+          <button type="button" class="btn btn-soft btn-sm" id="btn-save">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+            Simpan
+          </button>
+        </div>
+        <button type="button" class="btn btn-soft btn-sm btn-danger" id="btn-reset" style="margin-top:8px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Kosongkan Form
+        </button>
+        <p class="action-note">Ekspor PDF membuka dialog cetak browser.<br>Pilih <b>Save as PDF</b> / <b>Simpan sebagai PDF</b>.<br>Matikan <b>Headers and footers</b> agar hasil bersih.</p>
+      </section>
+
+      <section class="card wa-card">
+        <div class="wa-head">
+          <div class="wa-ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.19-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Z"/></svg>
+          </div>
+          <div>
+            <h3>Kirim ke WhatsApp</h3>
+            <p class="wa-number">+62 852-1269-0901</p>
+          </div>
+        </div>
+        <ol class="wa-steps">
+          <li>Klik <b>Ekspor PDF</b>, lalu simpan file PDF-nya.</li>
+          <li>Klik <b>Kirim ke WhatsApp</b> &mdash; ringkasan terisi otomatis.</li>
+          <li>Lampirkan file PDF pada chat, lalu kirim.</li>
+        </ol>
+        <button type="button" class="link-copy" id="btn-copy">Salin ringkasan teks</button>
+      </section>
+
+      <p class="foot-note">Data tersimpan otomatis di perangkat ini (localStorage). Tidak dikirim ke server.</p>
+    </aside>
+  </div>
+</main>
+
+<div class="mobile-bar">
+  <div class="inner">
+    <button type="button" class="btn btn-primary" id="m-btn-export">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+      Ekspor PDF
+    </button>
+    <button type="button" class="btn btn-wa" id="m-btn-wa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.19-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Z"/></svg>
+      WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- PREVIEW -->
+<div class="modal" id="preview-modal" hidden>
+  <div class="modal-box preview-box">
+    <div class="preview-head">
+      <div>
+        <h2>Pratinjau PDF</h2>
+        <p>Tampilan A4 &mdash; sama dengan hasil ekspor</p>
+      </div>
+      <button type="button" class="icon-btn" id="preview-close" aria-label="Tutup pratinjau">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="preview-body" id="preview-body"></div>
+    <div class="preview-foot">
+      <button type="button" class="btn btn-soft" id="preview-cancel">Tutup</button>
+      <button type="button" class="btn btn-primary" id="preview-export">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Ekspor PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="modal" id="confirm-modal" hidden>
+  <div class="modal-box">
+    <h3 class="modal-title" id="confirm-title">Konfirmasi</h3>
+    <p class="modal-msg" id="confirm-msg"></p>
+    <div class="modal-actions" id="confirm-actions">
+      <button type="button" class="btn btn-soft" id="confirm-cancel">Batal</button>
+      <button type="button" class="btn btn-primary" id="confirm-ok">Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span id="toast-msg"></span>
+  <button type="button" class="toast-action" id="toast-action" hidden></button>
+</div>
+
+<!-- AREA CETAK / PDF -->
+<div id="print-sheet" aria-hidden="true"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  var WA_NUMBER = '6285212690901';
+  var WA_DISPLAY = '+62 852-1269-0901';
+  var DRAFT_KEY = 'instrumen-pm-asrama-draft-v1';
+  var TTD_TETAP = {
+    penanggung: 'Martin Hamonangan',
+    kapokja: 'Tuti Nurhayati'
+  };
+
+  var INDIKATOR = [
+    { key:'ibadah',        nama:'Ibadah & Mental Spiritual',        desc:'Kedisiplinan ibadah harian, partisipasi pembinaan rohani dan bimbingan mental' },
+    { key:'kebersihan',    nama:'Kebersihan & Kerapihan Asrama',    desc:'Merawat kebersihan kamar, tempat tidur, pakaian pribadi dan area bersama' },
+    { key:'kejujuran',     nama:'Kejujuran & Integritas',           desc:'Keterbukaan dalam berinteraksi, tidak mengambil milik orang lain, mengakui kesalahan' },
+    { key:'etika',         nama:'Etika & Sopan Santun',             desc:'Penggunaan bahasa yang santun, sikap menghormati pengasuh, Peksos, dan teman sebaya' },
+    { key:'kemandirian',   nama:'Inisiatif & Kemandirian (Life Skills)', desc:'Kemampuan mengurus diri sendiri, jadwal kegiatan harian tanpa selalu diperintah' },
+    { key:'kedisiplinan',  nama:'Kedisiplinan & Kepatuhan Jadwal',  desc:'Tepat waktu bangun pagi, makan, mengikuti kegiatan, kembali ke asrama dan jam tidur malam' },
+    { key:'tanggung_jawab',nama:'Tanggung Jawab Tugas Asrama',      desc:'Pelaksanaan piket kebersihan, menjaga fasilitas asrama, serta kepatuhan aturan' },
+    { key:'interpersonal', nama:'Hubungan Interpersonal',           desc:'Adaptasi lingkungan, tidak berkonflik, dan aktif berpartisipasi dalam kelompok' },
+    { key:'kepatuhan',     nama:'Kepatuhan dan Respon Pada Petugas',desc:'Sikap kooperatif terhadap pengasuh, mengikuti arahan bimbingan dan terapi' },
+    { key:'regulasi_emosi',nama:'Regulasi Emosi & Resiliensi',      desc:'Kemampuan mengontrol emosi dan menyelesaikan masalah pribadi secara baik' }
+  ];
+
+  var SKALA = [
+    { nilai:1, label:'Sangat Kurang', desc:'PM menolak aturan, belum menunjukkan kemauan berubah atau membutuhkan pengawasan ketat dan intervensi intensif dari pengasuh.' },
+    { nilai:2, label:'Kurang',        desc:'Menunjukkan kesadaran sesekali, namun masih sering melakukan pelanggaran/hambatan dan memerlukan arahan berulang-ulang.' },
+    { nilai:3, label:'Baik',          desc:'PM mampu menjalankan aktivitas dan tata tertib asrama secara mandiri dengan sedikit arahan.' },
+    { nilai:4, label:'Sangat Baik',   desc:'Konsisten menjalankan norma, disiplin, dan etika, serta mampu menjadi teladan bagi rekan sebaya di asrama.' }
+  ];
+
+  var LAYANAN = [
+    'Dukungan pemenuhan hidup layak: kebutuhan nutrisi, kelengkapan alat bersih diri dan kelayakan kamar asrama',
+    'Perawatan sosial & pengasuhan: pendampingan 24 jam dan pengayoman oleh pengasuh asrama',
+    'Terapi fisik & kesehatan: olahraga rutin, kebugaran jasmani dan penanganan medis',
+    'Terapi psikososial & mental spiritual: konseling individu/kelompok, terapi, bimbingan keagamaan',
+    'Pelatihan vokasional & kewirausahaan: keterampilan kerja dan pengenalan ke Sentra Kreasi'
+  ];
+
+  var KEBERFUNGSIAN = [
+    'Belum Mandiri (memerlukan pendampingan penuh)',
+    'Mandiri Sebagian (memerlukan bimbingan berkala)',
+    'Mandiri Penuh (siap untuk terminasi/reunifikasi)'
+  ];
+
+  var TINDAK_LANJUT = [
+    'Melanjutkan layanan residensial di asrama',
+    'Rencana terminasi / pengembalian ke keluarga/masyarakat',
+    'Rujukan ke layanan / lembaga lain'
+  ];
+
+  var els = {};
+  var saveTimer = null;
+  var sheetTimer = null;
+  var lastSavedAt = null;
+  var confirmResolver = null;
+  var toastTimer = null;
+
+  function $(id){ return document.getElementById(id); }
+  function esc(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function nl2br(v){ return esc(v).replace(/\r?\n/g, '<br>'); }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function nowLabel(){
+    var d = new Date();
+    return pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  }
+  function formatDateID(iso){
+    if(!iso) return '';
+    var parts = String(iso).split('-');
+    if(parts.length !== 3) return iso;
+    return parts[2] + '/' + parts[1] + '/' + parts[0];
+  }
+  function checkedValues(selector){
+    return Array.prototype.map.call(document.querySelectorAll(selector), function(el){ return el.value; });
+  }
+
+  /* ---------- RENDER STATIS ---------- */
+  function renderIndicators(){
+    els.indicatorList.innerHTML = INDIKATOR.map(function(ind, idx){
+      return '' +
+      '<div class="ind-row" data-row="' + ind.key + '">' +
+        '<div class="ind-no">' + (idx + 1) + '</div>' +
+        '<div>' +
+          '<p class="ind-name">' + esc(ind.nama) + '</p>' +
+          '<p class="ind-desc">' + esc(ind.desc) + '</p>' +
+        '</div>' +
+        '<div class="ind-score">' +
+          '<div class="rating" role="radiogroup" aria-label="Nilai ' + esc(ind.nama) + '">' +
+            SKALA.map(function(sk){
+              return '<label data-value="' + sk.nilai + '" title="' + sk.nilai + ' - ' + esc(sk.label) + '">' +
+                '<input type="radio" name="nilai-' + ind.key + '" value="' + sk.nilai + '">' +
+                '<span>' + sk.nilai + '</span>' +
+              '</label>';
+            }).join('') +
+          '</div>' +
+          '<span class="score-txt" data-score-label="' + ind.key + '">Belum diisi</span>' +
+        '</div>' +
+        '<div class="ind-note">' +
+          '<textarea data-catatan="' + ind.key + '" rows="2" placeholder="Catatan perilaku & intervensi..."></textarea>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderLists(){
+    els.legend.innerHTML = '<span class="legend-title">Keterangan Nilai</span>' +
+      SKALA.map(function(sk){
+        return '<div class="legend-item"><span class="legend-num ln' + sk.nilai + '">' + sk.nilai + '</span>' +
+          '<span><b>' + esc(sk.label) + ':</b> ' + esc(sk.desc) + '</span></div>';
+      }).join('');
+
+    els.layananList.innerHTML = LAYANAN.map(function(item, i){
+      return '<label class="check-item"><input type="checkbox" data-layanan value="' + esc(item) + '" id="layanan-' + i + '">' +
+        '<span>' + esc(item) + '</span></label>';
+    }).join('');
+
+    els.keberfungsianList.innerHTML = KEBERFUNGSIAN.map(function(item, i){
+      return '<label class="check-item"><input type="checkbox" data-keberfungsian value="' + esc(item) + '" id="keberfungsian-' + i + '">' +
+        '<span>' + esc(item) + '</span></label>';
+    }).join('');
+
+    els.tindakLanjutList.innerHTML = TINDAK_LANJUT.map(function(item, i){
+      return '<label class="check-item"><input type="checkbox" data-tindak-lanjut value="' + esc(item) + '" id="tindak-' + i + '">' +
+        '<span>' + esc(item) + '</span></label>';
+    }).join('');
+  }
+
+  /* ---------- STATE ---------- */
+  function collect(){
+    var nilai = {};
+    var catatan = {};
+    INDIKATOR.forEach(function(ind){
+      nilai[ind.key] = 0;
+      var checked = document.querySelector('input[name="nilai-' + ind.key + '"]:checked');
+      if(checked) nilai[ind.key] = Number(checked.value) || 0;
+      var ta = document.querySelector('[data-catatan="' + ind.key + '"]');
+      catatan[ind.key] = ta ? ta.value.trim() : '';
+    });
+
+    return {
+      identitas: {
+        nama: els.inNama.value.trim(),
+        asrama: els.inAsrama.value.trim(),
+        masuk: els.inMasuk.value,
+        pengasuh: els.inPengasuh.value.trim(),
+        peksos: els.inPeksos.value.trim(),
+        klaster: els.inKlaster.value.trim()
+      },
+      nilai: nilai,
+      catatan: catatan,
+      layanan: Array.prototype.map.call(document.querySelectorAll('[data-layanan]:checked'), function(el){ return el.value; }),
+      keberfungsian: checkedValues('[data-keberfungsian]:checked'),
+      tindakLanjut: checkedValues('[data-tindak-lanjut]:checked'),
+      catatanTambahan: els.inCatatan.value.trim(),
+      ttd: {
+        pengasuh: els.ttdPengasuh.value.trim(),
+        peksos: els.ttdPeksos.value.trim(),
+        penanggung: TTD_TETAP.penanggung,
+        kapokja: TTD_TETAP.kapokja
+      }
+    };
+  }
+
+  function saveDraft(manual){
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ savedAt: Date.now(), data: collect() }));
+      lastSavedAt = new Date();
+      setStatus('Tersimpan otomatis \u00b7 ' + nowLabel(), false);
+      if(manual) toast('Draft berhasil disimpan di perangkat ini.', 'ok');
+    } catch(e) {
+      setStatus('Gagal menyimpan draft', false);
+    }
+  }
+
+  function scheduleSave(){
+    clearTimeout(saveTimer);
+    setStatus('Menyimpan...', true);
+    saveTimer = setTimeout(function(){ saveDraft(false); }, 450);
+  }
+
+  function restoreDraft(){
+    var raw;
+    try { raw = localStorage.getItem(DRAFT_KEY); } catch(e) { return false; }
+    if(!raw) return false;
+
+    var saved;
+    try { saved = JSON.parse(raw); } catch(e) { return false; }
+    if(!saved || !saved.data) return false;
+
+    var d = saved.data;
+    var id = d.identitas || {};
+    els.inNama.value = id.nama || '';
+    els.inAsrama.value = id.asrama || '';
+    els.inMasuk.value = id.masuk || '';
+    els.inPengasuh.value = id.pengasuh || '';
+    els.inPeksos.value = id.peksos || '';
+    els.inKlaster.value = id.klaster || '';
+
+    INDIKATOR.forEach(function(ind){
+      var v = d.nilai && d.nilai[ind.key] ? String(d.nilai[ind.key]) : '';
+      if(v){
+        var radio = document.querySelector('input[name="nilai-' + ind.key + '"][value="' + v + '"]');
+        if(radio) radio.checked = true;
+      }
+      var ta = document.querySelector('[data-catatan="' + ind.key + '"]');
+      if(ta) ta.value = (d.catatan && d.catatan[ind.key]) || '';
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-layanan]'), function(cb){
+      cb.checked = (d.layanan || []).indexOf(cb.value) !== -1;
+    });
+
+    var kebList = Array.isArray(d.keberfungsian) ? d.keberfungsian : (d.keberfungsian ? [d.keberfungsian] : []);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-keberfungsian]'), function(cb){
+      cb.checked = kebList.indexOf(cb.value) !== -1;
+    });
+
+    var tlList = Array.isArray(d.tindakLanjut) ? d.tindakLanjut : (d.tindakLanjut ? [d.tindakLanjut] : []);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-tindak-lanjut]'), function(cb){
+      cb.checked = tlList.indexOf(cb.value) !== -1;
+    });
+
+    els.inCatatan.value = d.catatanTambahan || '';
+    var ttd = d.ttd || {};
+    els.ttdPengasuh.value = ttd.pengasuh || '';
+    els.ttdPeksos.value = ttd.peksos || '';
+    els.ttdPenanggung.value = TTD_TETAP.penanggung;
+    els.ttdKapokja.value = TTD_TETAP.kapokja;
+
+    if(saved.savedAt){
+      var dt = new Date(saved.savedAt);
+      lastSavedAt = dt;
+      setStatus('Draft dimuat \u00b7 ' + pad2(dt.getHours()) + ':' + pad2(dt.getMinutes()), false);
+    }
+    return true;
+  }
+
+  /* ---------- SUMMARY ---------- */
+  function predikatOf(avg){
+    if(avg >= 3.5) return { label:'Sangat Baik', tone:'emerald' };
+    if(avg >= 2.5) return { label:'Baik', tone:'sky' };
+    if(avg >= 1.5) return { label:'Kurang', tone:'amber' };
+    return { label:'Sangat Kurang', tone:'rose' };
+  }
+
+  function updateSummary(){
+    var s = collect();
+    var filled = 0, total = 0;
+    var low = [];
+
+    INDIKATOR.forEach(function(ind){
+      var v = s.nilai[ind.key] || 0;
+      var row = document.querySelector('[data-row="' + ind.key + '"]');
+      var label = document.querySelector('[data-score-label="' + ind.key + '"]');
+      var seg = document.querySelector('[data-seg="' + ind.key + '"]');
+      if(v > 0){
+        filled++;
+        total += v;
+        if(v <= 2) low.push({ nama: ind.nama, nilai: v });
+      }
+      if(row) row.classList.toggle('is-scored', v > 0);
+      if(label){
+        var sk = SKALA.filter(function(x){ return x.nilai === v; })[0];
+        label.textContent = sk ? (v + ' \u00b7 ' + sk.label) : 'Belum diisi';
+        label.classList.toggle('is-scored', v > 0);
+      }
+      if(seg) seg.className = v > 0 ? ('f' + v) : '';
+    });
+
+    var avg = filled > 0 ? total / filled : 0;
+    els.totalScore.textContent = String(total);
+    els.filledCount.textContent = String(filled);
+    els.avgScore.textContent = avg.toFixed(2);
+    els.miniText.textContent = filled + '/10';
+    els.miniBar.style.width = (filled * 10) + '%';
+
+    var badge = els.predikatBadge;
+    badge.className = 'badge';
+    if(filled === 0){
+      badge.textContent = 'Belum dinilai';
+    } else {
+      var p = predikatOf(avg);
+      badge.textContent = p.label;
+      badge.classList.add('tone-' + p.tone);
+    }
+
+    if(low.length === 0){
+      els.lowBox.innerHTML = filled === 0
+        ? 'Nilai setiap aspek untuk melihat ringkasan dan aspek yang perlu perhatian.'
+        : (filled < 10 ? 'Belum ada aspek bernilai kurang dari 3.' : '<strong>Seluruh aspek</strong> berada pada kategori baik (3&ndash;4).');
+    } else {
+      els.lowBox.innerHTML = '<strong>Perlu perhatian:</strong><ul>' +
+        low.map(function(x){ return '<li>' + esc(x.nama) + ' (' + x.nilai + ')</li>'; }).join('') +
+        '</ul>';
+    }
+
+    document.querySelectorAll('.ind-note textarea').forEach(function(ta){
+      ta.style.height = 'auto';
+      ta.style.height = Math.max(62, ta.scrollHeight) + 'px';
+    });
+  }
+
+  /* ---------- PRINT SHEET ---------- */
+  function signatureName(name, fallback){
+    var n = (name || '').trim() || (fallback || '').trim();
+    return n ? '( ' + n + ' )' : '( _____________________ )';
+  }
+
+  function buildPrintContent(){
+    var s = collect();
+    var id = s.identitas;
+    var blank = '&nbsp;';
+
+    var identRow = function(k1, v1, k2, v2){
+      return '<tr>' +
+        '<td class="k">' + esc(k1) + '</td><td class="c">:</td><td class="v">' + (v1 ? esc(v1) : blank) + '</td>' +
+        '<td class="k2">' + esc(k2) + '</td><td class="c">:</td><td class="v2">' + (v2 ? esc(v2) : blank) + '</td>' +
+      '</tr>';
+    };
+
+    var rows = INDIKATOR.map(function(ind, idx){
+      var nilai = s.nilai[ind.key] || 0;
+      var catatan = s.catatan[ind.key] || '';
+      return '<tr>' +
+        '<td class="ps-no">' + (idx + 1) + '</td>' +
+        '<td>' +
+          '<div class="ps-ind-name">' + esc(ind.nama) + '</div>' +
+          '<div class="ps-ind-desc">' + esc(ind.desc) + '</div>' +
+        '</td>' +
+        '<td class="ps-nilai">' + SKALA.map(function(sk){
+          return '<span class="ps-nbox' + (nilai === sk.nilai ? ' on' : '') + '">' + sk.nilai + '</span>';
+        }).join('') + '</td>' +
+        '<td class="ps-catatan">' + (catatan ? nl2br(catatan) : '&nbsp;') + '</td>' +
+      '</tr>';
+    }).join('');
+
+    var checkRow = function(checked, label){
+      return '<div class="ps-check"><span class="ps-box">' + (checked ? '&#10003;' : '') + '</span><span>' + esc(label) + '</span></div>';
+    };
+
+    var ttdPengasuh = signatureName(s.ttd.pengasuh, id.pengasuh);
+    var ttdPeksos = signatureName(s.ttd.peksos, id.peksos);
+    var ttdPenanggung = signatureName(s.ttd.penanggung, '');
+    var ttdKapokja = signatureName(s.ttd.kapokja, '');
+
+    return '' +
+      '<div class="ps-title">INSTRUMEN EVALUASI &amp; PERKEMBANGAN PENERIMA MANFAAT (PM) di ASRAMA</div>' +
+
+      '<p class="ps-h">I. Identitas Penerima Manfaat &amp; Petugas</p>' +
+      '<table class="ps-ident">' +
+        identRow('Nama PM', id.nama, 'Pengasuh Asrama', id.pengasuh) +
+        identRow('Asrama', id.asrama, 'Pekerja Sosial', id.peksos) +
+        identRow('Tanggal Masuk', formatDateID(id.masuk), 'Klaster PM', id.klaster) +
+      '</table>' +
+
+      '<p class="ps-h">II. Evaluasi Perkembangan PM Asrama</p>' +
+      '<table class="ps-table">' +
+        '<thead><tr>' +
+          '<th class="ps-col-no">No</th>' +
+          '<th>Indikator / Aspek Perkembangan</th>' +
+          '<th class="ps-col-nilai">Nilai (1 - 4)</th>' +
+          '<th class="ps-col-catatan">Catatan Perilaku &amp; Intervensi Pengasuh</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+      '<div class="ps-legend">' +
+        '<div class="ps-legend-title">Nilai</div>' +
+        SKALA.map(function(sk){
+          return '<p>&bull; <strong>' + sk.nilai + ' (' + esc(sk.label) + '):</strong> ' + esc(sk.desc) + '</p>';
+        }).join('') +
+      '</div>' +
+
+      '<p class="ps-h">III. Layanan yang Sudah Diberikan:</p>' +
+      '<div class="ps-checks">' +
+        LAYANAN.map(function(item){ return checkRow(s.layanan.indexOf(item) !== -1, item); }).join('') +
+      '</div>' +
+
+      '<p class="ps-h">IV. Kesimpulan &amp; Rekomendasi Pekerja Sosial</p>' +
+      '<p class="ps-sub">Tingkat Keberfungsian Sosial saat ini:</p>' +
+      '<div class="ps-checks">' +
+        KEBERFUNGSIAN.map(function(item){ return checkRow(s.keberfungsian.indexOf(item) !== -1, item); }).join('') +
+      '</div>' +
+      '<p class="ps-sub">Rekomendasi tindak lanjut (TL):</p>' +
+      '<div class="ps-checks">' +
+        TINDAK_LANJUT.map(function(item){ return checkRow(s.tindakLanjut.indexOf(item) !== -1, item); }).join('') +
+      '</div>' +
+      (s.catatanTambahan
+        ? '<p class="ps-sub">Catatan tambahan:</p><p style="font-size:7.6pt;margin-left:10pt;line-height:1.35">' + nl2br(s.catatanTambahan) + '</p>'
+        : '') +
+
+      '<table class="ps-sign">' +
+        '<tr>' +
+          '<td><div class="ps-sign-row"><span class="role">Pengasuh Asrama</span><span class="name">' + esc(ttdPengasuh) + '</span></div></td>' +
+          '<td><div class="ps-sign-row"><span class="role">Pekerja Sosial</span><span class="name">' + esc(ttdPeksos) + '</span></div></td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td><div class="ps-sign-row"><span class="role">Penanggungjawab Pengasuhan</span><span class="name">' + esc(ttdPenanggung) + '</span></div></td>' +
+          '<td><div class="ps-sign-row"><span class="role">Kapokja Residensial</span><span class="name">' + esc(ttdKapokja) + '</span></div></td>' +
+        '</tr>' +
+      '</table>';
+  }
+
+  function refreshPrintSheet(){
+    els.printSheet.innerHTML = '<div class="ps">' + buildPrintContent() + '</div>';
+  }
+
+  function scheduleSheet(){
+    clearTimeout(sheetTimer);
+    sheetTimer = setTimeout(refreshPrintSheet, 250);
+  }
+
+  /* ---------- WHATSAPP ---------- */
+  function buildWaText(){
+    var s = collect();
+    var id = s.identitas;
+    var filled = 0, total = 0;
+    var lines = [];
+
+    lines.push('*INSTRUMEN EVALUASI & PERKEMBANGAN PM DI ASRAMA*');
+    lines.push('Sentra Handayani Jakarta');
+    lines.push('');
+    lines.push('*I. IDENTITAS*');
+    lines.push('Nama PM: ' + (id.nama || '-'));
+    lines.push('Asrama: ' + (id.asrama || '-'));
+    lines.push('Tanggal Masuk: ' + (formatDateID(id.masuk) || '-'));
+    lines.push('Pengasuh Asrama: ' + (id.pengasuh || '-'));
+    lines.push('Pekerja Sosial: ' + (id.peksos || '-'));
+    lines.push('Klaster PM: ' + (id.klaster || '-'));
+    lines.push('');
+    lines.push('*II. EVALUASI PERKEMBANGAN*');
+
+    INDIKATOR.forEach(function(ind, idx){
+      var v = s.nilai[ind.key] || 0;
+      var sk = SKALA.filter(function(x){ return x.nilai === v; })[0];
+      if(v > 0){ filled++; total += v; }
+      lines.push((idx + 1) + '. ' + ind.nama + ': ' + (v > 0 ? '*' + v + '* (' + sk.label + ')' : '_belum dinilai_'));
+      if(s.catatan[ind.key]) lines.push('   _Catatan: ' + s.catatan[ind.key] + '_');
+    });
+
+    var avg = filled > 0 ? total / filled : 0;
+    lines.push('');
+    lines.push('*Total: ' + total + '/40 | Rata-rata: ' + avg.toFixed(2) + (filled > 0 ? ' | Predikat: ' + predikatOf(avg).label : '') + '*');
+
+    lines.push('');
+    lines.push('*III. LAYANAN YANG SUDAH DIBERIKAN*');
+    if(s.layanan.length === 0){
+      lines.push('- Belum ada layanan yang dicentang');
+    } else {
+      s.layanan.forEach(function(item){ lines.push('- ' + item); });
+    }
+
+    lines.push('');
+    lines.push('*IV. KESIMPULAN & REKOMENDASI*');
+    lines.push('Keberfungsian: ' + (s.keberfungsian.length ? s.keberfungsian.join(', ') : '-'));
+    lines.push('Tindak lanjut: ' + (s.tindakLanjut.length ? s.tindakLanjut.join(', ') : '-'));
+    if(s.catatanTambahan) lines.push('Catatan: ' + s.catatanTambahan);
+
+    lines.push('');
+    lines.push('_Dikirim dari Form Instrumen Perkembangan PM - Sentra Handayani._');
+
+    return lines.join('\n');
+  }
+
+  function sendWhatsApp(){
+    var s = collect();
+    if(!s.identitas.nama){
+      toast('Isi Nama PM terlebih dahulu sebelum mengirim.', 'warn');
+      els.inNama.focus();
+      return;
+    }
+    var url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildWaText());
+    window.open(url, '_blank', 'noopener');
+    toast('Membuka WhatsApp ' + WA_DISPLAY + '. Lampirkan file PDF pada chat.', 'ok', 6000);
+  }
+
+  function copySummary(){
+    var text = buildWaText();
+    var done = function(){ toast('Ringkasan teks disalin. Tempel di chat WhatsApp.', 'ok'); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+
+  function fallbackCopy(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch(e) { toast('Gagal menyalin teks.', 'warn'); }
+    document.body.removeChild(ta);
+  }
+
+  /* ---------- EXPORT ---------- */
+  function doPrint(){
+    refreshPrintSheet();
+    closePreview();
+    closeConfirm();
+
+    var nama = collect().identitas.nama || 'PM';
+    var prevTitle = document.title;
+    document.title = 'Instrumen Perkembangan PM - ' + nama;
+
+    var finished = false;
+    var restore = function(){
+      if(finished) return;
+      finished = true;
+      document.title = prevTitle;
+      setTimeout(askWhatsApp, 250);
+    };
+
+    window.addEventListener('afterprint', restore, { once: true });
+    setTimeout(restore, 60000);
+    window.print();
+  }
+
+  function startExport(){
+    var s = collect();
+    if(!s.identitas.nama){
+      toast('Lengkapi Nama PM sebelum ekspor PDF.', 'warn');
+      els.inNama.focus();
+      return;
+    }
+
+    var missing = INDIKATOR.filter(function(ind){ return !s.nilai[ind.key]; });
+    if(missing.length > 0){
+      confirmDialog({
+        title: 'Masih ada nilai kosong',
+        message: 'Ada ' + missing.length + ' indikator yang belum diberi nilai. Tetap ekspor PDF sekarang?',
+        okLabel: 'Tetap Ekspor',
+        cancelLabel: 'Periksa Lagi'
+      }).then(function(ok){ if(ok) doPrint(); });
+      return;
+    }
+    doPrint();
+  }
+
+  function askWhatsApp(){
+    confirmDialog({
+      title: 'PDF selesai diekspor',
+      message: 'Lampirkan file PDF yang baru disimpan ke chat WhatsApp, lalu kirim ke ' + WA_DISPLAY + '.\n\nBuka WhatsApp sekarang?',
+      okLabel: 'Buka WhatsApp',
+      cancelLabel: 'Nanti'
+    }).then(function(ok){ if(ok) sendWhatsApp(); });
+  }
+
+  /* ---------- PREVIEW ---------- */
+  function openPreview(){
+    els.previewBody.innerHTML = '<div class="ps-wrap"><div class="ps">' + buildPrintContent() + '</div></div>';
+    els.previewModal.hidden = false;
+    document.body.classList.add('modal-open');
+    requestAnimationFrame(fitPreview);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitPreview);
+  }
+
+  function fitPreview(){
+    var wrap = els.previewBody.querySelector('.ps-wrap');
+    if(!wrap) return;
+    var sheet = wrap.querySelector('.ps');
+    if(!sheet) return;
+
+    sheet.style.position = 'absolute';
+    sheet.style.left = '0';
+    sheet.style.top = '0';
+    sheet.style.transformOrigin = 'top left';
+
+    var avail = wrap.clientWidth;
+    var w = 210 * 96 / 25.4;
+    var scale = Math.min(1, avail / w);
+    sheet.style.transform = 'scale(' + scale + ')';
+    wrap.style.height = (sheet.offsetHeight * scale) + 'px';
+  }
+
+  function closePreview(){
+    els.previewModal.hidden = true;
+    els.previewBody.innerHTML = '';
+    document.body.classList.remove('modal-open');
+  }
+
+  /* ---------- CONFIRM ---------- */
+  function confirmDialog(opts){
+    els.confirmTitle.textContent = opts.title || 'Konfirmasi';
+    els.confirmMsg.textContent = opts.message || '';
+    els.confirmOk.textContent = opts.okLabel || 'Lanjut';
+    els.confirmCancel.textContent = opts.cancelLabel || 'Batal';
+    els.confirmModal.hidden = false;
+    document.body.classList.add('modal-open');
+    els.confirmOk.focus();
+
+    return new Promise(function(resolve){
+      confirmResolver = resolve;
+    });
+  }
+
+  function closeConfirm(result){
+    if(els.confirmModal.hidden){
+      return;
+    }
+    els.confirmModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    var fn = confirmResolver;
+    confirmResolver = null;
+    if(fn) fn(!!result);
+  }
+
+  /* ---------- TOAST ---------- */
+  function toast(message, tone, actionLabel, actionFn){
+    els.toastMsg.textContent = message;
+    els.toast.className = 'toast show' + (tone ? ' ' + tone : '');
+    if(actionLabel && actionFn){
+      els.toastAction.hidden = false;
+      els.toastAction.textContent = actionLabel;
+      els.toastAction.onclick = function(){ hideToast(); actionFn(); };
+    } else {
+      els.toastAction.hidden = true;
+      els.toastAction.onclick = null;
+    }
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, actionLabel ? 10000 : 3600);
+  }
+
+  function hideToast(){
+    els.toast.classList.remove('show');
+    clearTimeout(toastTimer);
+  }
+
+  function setStatus(text, saving){
+    els.saveStatus.textContent = text;
+    els.statusDot.classList.toggle('is-saving', !!saving);
+  }
+
+  /* ---------- RESET ---------- */
+  function resetForm(){
+    confirmDialog({
+      title: 'Kosongkan form?',
+      message: 'Semua isian dan draft yang tersimpan di perangkat ini akan dihapus. Tindakan ini tidak bisa dibatalkan.',
+      okLabel: 'Ya, Kosongkan',
+      cancelLabel: 'Batal'
+    }).then(function(ok){
+      if(!ok) return;
+      try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+      location.reload();
+    });
+  }
+
+  /* ---------- EVENTS ---------- */
+  function bindEvents(){
+    document.addEventListener('change', function(e){
+      if(e.target.matches('input[name^="nilai-"]') ||
+         e.target.matches('[data-keberfungsian]') ||
+         e.target.matches('[data-tindak-lanjut]') ||
+         e.target.matches('[data-layanan]')){
+        updateSummary();
+        scheduleSave();
+        scheduleSheet();
+      }
+    });
+
+    document.addEventListener('input', function(e){
+      if(e.target.matches('textarea, input[type="text"], input[type="date"]')){
+        updateSummary();
+        scheduleSave();
+        scheduleSheet();
+      }
+    });
+
+    els.btnExport.addEventListener('click', startExport);
+    els.mBtnExport.addEventListener('click', startExport);
+    els.btnWa.addEventListener('click', sendWhatsApp);
+    els.mBtnWa.addEventListener('click', sendWhatsApp);
+    els.btnPreview.addEventListener('click', openPreview);
+    els.btnSave.addEventListener('click', function(){ saveDraft(true); });
+    els.btnReset.addEventListener('click', resetForm);
+    els.btnCopy.addEventListener('click', copySummary);
+
+    els.previewClose.addEventListener('click', closePreview);
+    els.previewCancel.addEventListener('click', closePreview);
+    els.previewExport.addEventListener('click', function(){ closePreview(); setTimeout(doPrint, 80); });
+    els.previewModal.addEventListener('click', function(e){ if(e.target === els.previewModal) closePreview(); });
+
+    els.confirmOk.addEventListener('click', function(){ closeConfirm(true); });
+    els.confirmCancel.addEventListener('click', function(){ closeConfirm(false); });
+    els.confirmModal.addEventListener('click', function(e){ if(e.target === els.confirmModal) closeConfirm(false); });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){
+        if(!els.previewModal.hidden) closePreview();
+        else if(!els.confirmModal.hidden) closeConfirm(false);
+      }
+    });
+
+    window.addEventListener('resize', function(){
+      if(!els.previewModal.hidden) fitPreview();
+    });
+
+    window.addEventListener('beforeprint', refreshPrintSheet);
+  }
+
+  /* ---------- INIT ---------- */
+  function init(){
+    els = {
+      indicatorList: $('indicator-list'),
+      legend: $('legend'),
+      layananList: $('layanan-list'),
+      keberfungsianList: $('keberfungsian-list'),
+      tindakLanjutList: $('tindak-lanjut-list'),
+
+      inNama: $('in-nama'),
+      inAsrama: $('in-asrama'),
+      inMasuk: $('in-masuk'),
+      inPengasuh: $('in-pengasuh'),
+      inPeksos: $('in-peksos'),
+      inKlaster: $('in-klaster'),
+      inCatatan: $('in-catatan'),
+
+      ttdPengasuh: $('ttd-pengasuh'),
+      ttdPeksos: $('ttd-peksos'),
+      ttdPenanggung: $('ttd-penanggung'),
+      ttdKapokja: $('ttd-kapokja'),
+
+      totalScore: $('total-score'),
+      avgScore: $('avg-score'),
+      filledCount: $('filled-count'),
+      predikatBadge: $('predikat-badge'),
+      lowBox: $('low-box'),
+      segments: $('segments'),
+      miniText: $('mini-text'),
+      miniBar: $('mini-bar'),
+
+      btnExport: $('btn-export'),
+      btnWa: $('btn-wa'),
+      btnPreview: $('btn-preview'),
+      btnSave: $('btn-save'),
+      btnReset: $('btn-reset'),
+      btnCopy: $('btn-copy'),
+      mBtnExport: $('m-btn-export'),
+      mBtnWa: $('m-btn-wa'),
+
+      previewModal: $('preview-modal'),
+      previewBody: $('preview-body'),
+      previewClose: $('preview-close'),
+      previewCancel: $('preview-cancel'),
+      previewExport: $('preview-export'),
+
+      confirmModal: $('confirm-modal'),
+      confirmTitle: $('confirm-title'),
+      confirmMsg: $('confirm-msg'),
+      confirmOk: $('confirm-ok'),
+      confirmCancel: $('confirm-cancel'),
+
+      toast: $('toast'),
+      toastMsg: $('toast-msg'),
+      toastAction: $('toast-action'),
+
+      saveStatus: $('save-status'),
+      statusDot: $('status-dot'),
+      printSheet: $('print-sheet')
+    };
+
+    renderIndicators();
+    renderLists();
+
+    els.segments.innerHTML = INDIKATOR.map(function(ind){
+      return '<i data-seg="' + ind.key + '"></i>';
+    }).join('');
+
+    bindEvents();
+
+    var restored = restoreDraft();
+    updateSummary();
+    refreshPrintSheet();
+
+    if(!restored){
+      setStatus('Draft tersimpan otomatis', false);
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
