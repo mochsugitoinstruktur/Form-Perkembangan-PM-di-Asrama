@@ -6,6 +6,7 @@
     penanggung: 'Martin Hamonangan',
     kapokja: 'Tuti Nurhayati'
   };
+  var currentPengasuhSignImg = null;
 
   var INDIKATOR = [
     { key:'ibadah',        nama:'Ibadah & Mental Spiritual',        desc:'Kedisiplinan ibadah harian, partisipasi pembinaan rohani dan bimbingan mental' },
@@ -160,7 +161,8 @@
         pengasuh: els.ttdPengasuh.value.trim(),
         peksos: els.ttdPeksos.value.trim(),
         penanggung: TTD_TETAP.penanggung,
-        kapokja: TTD_TETAP.kapokja
+        kapokja: TTD_TETAP.kapokja,
+        pengasuhImg: currentPengasuhSignImg || ''
       }
     };
   }
@@ -232,6 +234,12 @@
     els.ttdPeksos.value = ttd.peksos || '';
     els.ttdPenanggung.value = TTD_TETAP.penanggung;
     els.ttdKapokja.value = TTD_TETAP.kapokja;
+
+    if(ttd.pengasuhImg){
+      setPengasuhSignature(ttd.pengasuhImg, false);
+    } else {
+      clearPengasuhSignature(false);
+    }
 
     if(saved.savedAt){
       var dt = new Date(saved.savedAt);
@@ -306,10 +314,256 @@
     });
   }
 
+  /* ---------- TANDA TANGAN (AUTO REMOVE BACKGROUND) ---------- */
+  function removeSignatureBackground(img){
+    var maxDim = 1200;
+    var w = img.naturalWidth || img.width;
+    var h = img.naturalHeight || img.height;
+    if(w > maxDim || h > maxDim){
+      if(w > h){
+        h = Math.round(h * (maxDim / w));
+        w = maxDim;
+      } else {
+        w = Math.round(w * (maxDim / h));
+        h = maxDim;
+      }
+    }
+
+    var canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+
+    var imgData = ctx.getImageData(0, 0, w, h);
+    var data = imgData.data;
+    var totalPixels = w * h;
+
+    // Cek jika gambar sudah memiliki background transparan (misal PNG transparan)
+    var transparentCount = 0;
+    for(var i = 3; i < data.length; i += 4){
+      if(data[i] < 30) transparentCount++;
+    }
+    if((transparentCount / totalPixels) > 0.20){
+      return autoCropCanvas(canvas, ctx, data, w, h);
+    }
+
+    // Estimasi background berbasis grid lokal (adaptif terhadap bayangan / pencahayaan kertas foto)
+    var gridCols = 24;
+    var gridRows = 24;
+    var blockW = Math.ceil(w / gridCols);
+    var blockH = Math.ceil(h / gridRows);
+    var bgLumGrid = [];
+
+    for(var gy = 0; gy < gridRows; gy++){
+      bgLumGrid[gy] = [];
+      for(var gx = 0; gx < gridCols; gx++){
+        var xStart = gx * blockW;
+        var yStart = gy * blockH;
+        var xEnd = Math.min(w, xStart + blockW);
+        var yEnd = Math.min(h, yStart + blockH);
+
+        var blockLums = [];
+        for(var py = yStart; py < yEnd; py += 2){
+          for(var px = xStart; px < xEnd; px += 2){
+            var idx = (py * w + px) * 4;
+            var r = data[idx], g = data[idx + 1], b = data[idx + 2];
+            var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+            blockLums.push(lum);
+          }
+        }
+
+        if(blockLums.length > 0){
+          blockLums.sort(function(a, b){ return a - b; });
+          var p90 = blockLums[Math.floor(blockLums.length * 0.90)];
+          bgLumGrid[gy][gx] = p90;
+        } else {
+          bgLumGrid[gy][gx] = 245;
+        }
+      }
+    }
+
+    // Smoothing nilai background antar grid
+    var smoothBg = [];
+    for(var gy = 0; gy < gridRows; gy++){
+      smoothBg[gy] = [];
+      for(var gx = 0; gx < gridCols; gx++){
+        var sum = 0, count = 0;
+        for(var dy = -1; dy <= 1; dy++){
+          for(var dx = -1; dx <= 1; dx++){
+            var ny = gy + dy, nx = gx + dx;
+            if(ny >= 0 && ny < gridRows && nx >= 0 && nx < gridCols){
+              sum += bgLumGrid[ny][nx];
+              count++;
+            }
+          }
+        }
+        smoothBg[gy][gx] = sum / count;
+      }
+    }
+
+    function getLocalBg(x, y){
+      var gx = (x / w) * (gridCols - 1);
+      var gy = (y / h) * (gridRows - 1);
+      var x0 = Math.floor(gx), x1 = Math.min(gridCols - 1, x0 + 1);
+      var y0 = Math.floor(gy), y1 = Math.min(gridRows - 1, y0 + 1);
+      var fx = gx - x0, fy = gy - y0;
+      var top = smoothBg[y0][x0] * (1 - fx) + smoothBg[y0][x1] * fx;
+      var btm = smoothBg[y1][x0] * (1 - fx) + smoothBg[y1][x1] * fx;
+      return top * (1 - fy) + btm * fy;
+    }
+
+    // Cek warna tinta dominan (tinta biru pulpen vs hitam)
+    var blueHits = 0, strokeHits = 0;
+    for(var y = 0; y < h; y += 4){
+      for(var x = 0; x < w; x += 4){
+        var idx = (y * w + x) * 4;
+        var r = data[idx], g = data[idx + 1], b = data[idx + 2];
+        var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+        var bg = getLocalBg(x, y);
+        if((bg - lum) > 28){
+          strokeHits++;
+          if(b > r + 15 && b > g + 8) blueHits++;
+        }
+      }
+    }
+    var isBlueInk = (strokeHits > 25 && (blueHits / strokeHits) > 0.25);
+
+    // Hapus background dan isolasi goresan tanda tangan
+    var minDiff = 14;
+    var maxDiff = 42;
+
+    for(var y = 0; y < h; y++){
+      for(var x = 0; x < w; x++){
+        var idx = (y * w + x) * 4;
+        var r = data[idx], g = data[idx + 1], b = data[idx + 2];
+        var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+        var bg = getLocalBg(x, y);
+        var diff = bg - lum;
+
+        if(diff <= minDiff){
+          data[idx + 3] = 0; // Kertas background dijadikan transparan
+        } else {
+          var t = Math.min(1, (diff - minDiff) / (maxDiff - minDiff));
+          var alpha = Math.round(Math.pow(t, 0.85) * 255);
+          data[idx + 3] = alpha;
+
+          if(isBlueInk){
+            // Tinta biru pulpen tajam dan bersih
+            data[idx] = Math.round(Math.min(r, 22 + (1 - t) * 35));
+            data[idx + 1] = Math.round(Math.min(g, 45 + (1 - t) * 45));
+            data[idx + 2] = Math.round(Math.max(125, Math.min(210, b)));
+          } else {
+            // Tinta hitam tajam dan pekat
+            var darkVal = Math.round(Math.min(28, lum * 0.18));
+            data[idx] = darkVal;
+            data[idx + 1] = darkVal;
+            data[idx + 2] = darkVal;
+          }
+        }
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    return autoCropCanvas(canvas, ctx, data, w, h);
+  }
+
+  function autoCropCanvas(canvas, ctx, data, w, h){
+    var minX = w, minY = h, maxX = 0, maxY = 0;
+    var found = false;
+
+    for(var y = 0; y < h; y++){
+      for(var x = 0; x < w; x++){
+        var a = data[(y * w + x) * 4 + 3];
+        if(a > 20){
+          if(x < minX) minX = x;
+          if(x > maxX) maxX = x;
+          if(y < minY) minY = y;
+          if(y > maxY) maxY = y;
+          found = true;
+        }
+      }
+    }
+
+    if(!found) return null;
+
+    var pad = 8;
+    minX = Math.max(0, minX - pad);
+    minY = Math.max(0, minY - pad);
+    maxX = Math.min(w - 1, maxX + pad);
+    maxY = Math.min(h - 1, maxY + pad);
+
+    var cropW = maxX - minX + 1;
+    var cropH = maxY - minY + 1;
+
+    var cropCanvas = document.createElement('canvas');
+    cropCanvas.width = cropW;
+    cropCanvas.height = cropH;
+    var cropCtx = cropCanvas.getContext('2d');
+    cropCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+
+    return cropCanvas.toDataURL('image/png');
+  }
+
+  function setPengasuhSignature(dataUrl, notify){
+    currentPengasuhSignImg = dataUrl;
+    if(els.ttdDropzone) els.ttdDropzone.classList.remove('is-invalid');
+    if(els.ttdPreviewImg) els.ttdPreviewImg.src = dataUrl;
+    if(els.ttdDropzone) els.ttdDropzone.style.display = 'none';
+    if(els.ttdPreviewCard) els.ttdPreviewCard.style.display = 'flex';
+    scheduleSheet();
+    scheduleSave();
+    if(notify) toast('Tanda tangan berhasil diproses & background dihapus.', 'ok');
+  }
+
+  function clearPengasuhSignature(notify){
+    currentPengasuhSignImg = null;
+    if(els.ttdPreviewImg) els.ttdPreviewImg.src = '';
+    if(els.ttdDropzone) els.ttdDropzone.style.display = '';
+    if(els.ttdPreviewCard) els.ttdPreviewCard.style.display = 'none';
+    if(els.inTtdFile) els.inTtdFile.value = '';
+    scheduleSheet();
+    scheduleSave();
+    if(notify) toast('Tanda tangan dihapus.', 'warn');
+  }
+
+  function handleTtdFile(file){
+    if(!file) return;
+    if(file.type && file.type.indexOf('image/') !== 0){
+      toast('File harus berupa gambar (JPG, PNG, atau WEBP).', 'warn');
+      return;
+    }
+    toast('Memproses gambar & menghapus background...', '');
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        try {
+          var cleanDataUrl = removeSignatureBackground(img);
+          if(!cleanDataUrl){
+            toast('Goresan tanda tangan tidak terdeteksi. Pastikan foto tanda tangan jelas.', 'warn');
+            return;
+          }
+          setPengasuhSignature(cleanDataUrl, true);
+        } catch(err){
+          toast('Gagal memproses tanda tangan: ' + err.message, 'warn');
+        }
+      };
+      img.onerror = function(){
+        toast('Gagal memuat gambar tanda tangan.', 'warn');
+      };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){
+      toast('Gagal membaca file.', 'warn');
+    };
+    reader.readAsDataURL(file);
+  }
+
   /* ---------- PRINT SHEET ---------- */
   function signatureName(name, fallback){
     var n = (name || '').trim() || (fallback || '').trim();
-    return n ? '( ' + n + ' )' : '( _____________________ )';
+    return n ? '( ' + n + ' )' : '( ________________________ )';
   }
 
   function buildPrintContent(){
@@ -348,6 +602,11 @@
     var ttdPeksos = signatureName(s.ttd.peksos, id.peksos);
     var ttdPenanggung = signatureName(s.ttd.penanggung, '');
     var ttdKapokja = signatureName(s.ttd.kapokja, '');
+
+    var ttdPengasuhHtml = '<span class="name' + (s.ttd.pengasuhImg ? ' ps-has-ttd' : '') + '">' +
+      (s.ttd.pengasuhImg ? '<img class="ps-ttd-img" src="' + s.ttd.pengasuhImg + '" alt="Tanda Tangan Pengasuh">' : '') +
+      '<span class="ps-name-text">' + esc(ttdPengasuh) + '</span>' +
+    '</span>';
 
     var periodeBulan = id.bulan ? esc(id.bulan) : '__________';
     var periodeTahun = id.tahun ? esc(id.tahun) : '__________';
@@ -400,12 +659,12 @@
 
       '<table class="ps-sign">' +
         '<tr>' +
-          '<td><div class="ps-sign-row"><span class="role">Pengasuh Asrama</span><span class="name">' + esc(ttdPengasuh) + '</span></div></td>' +
-          '<td><div class="ps-sign-row"><span class="role">Pekerja Sosial</span><span class="name">' + esc(ttdPeksos) + '</span></div></td>' +
+          '<td><div class="ps-sign-row"><span class="role">Pengasuh Asrama</span>' + ttdPengasuhHtml + '</div></td>' +
+          '<td><div class="ps-sign-row"><span class="role">Pekerja Sosial</span><span class="name"><span class="ps-name-text">' + esc(ttdPeksos) + '</span></span></div></td>' +
         '</tr>' +
         '<tr>' +
-          '<td><div class="ps-sign-row"><span class="role">Penanggungjawab Pengasuhan</span><span class="name">' + esc(ttdPenanggung) + '</span></div></td>' +
-          '<td><div class="ps-sign-row"><span class="role">Kapokja Residensial</span><span class="name">' + esc(ttdKapokja) + '</span></div></td>' +
+          '<td><div class="ps-sign-row"><span class="role">Penanggungjawab Pengasuhan</span><span class="name"><span class="ps-name-text">' + esc(ttdPenanggung) + '</span></span></div></td>' +
+          '<td><div class="ps-sign-row"><span class="role">Kapokja Residensial</span><span class="name"><span class="ps-name-text">' + esc(ttdKapokja) + '</span></span></div></td>' +
         '</tr>' +
       '</table>';
   }
@@ -428,12 +687,7 @@
   }
 
   function sendWhatsApp(){
-    var s = collect();
-    if(!s.identitas.nama){
-      toast('Isi Nama PM terlebih dahulu sebelum mengirim.', 'warn');
-      els.inNama.focus();
-      return;
-    }
+    if(!validateForm()) return;
     var url = 'https://wa.me/?text=' + encodeURIComponent(buildWaText());
     window.open(url, '_blank', 'noopener');
     toast('Membuka WhatsApp. Pilih grup atau chat tujuan, lalu lampirkan file PDF.', 'ok', 6000);
@@ -483,24 +737,81 @@
     window.print();
   }
 
-  function startExport(){
+  /* ---------- VALIDASI FORM ---------- */
+  function validateForm(){
     var s = collect();
-    if(!s.identitas.nama){
-      toast('Lengkapi Nama PM sebelum ekspor PDF.', 'warn');
-      els.inNama.focus();
-      return;
+    var id = s.identitas;
+
+    // Bersihkan penanda invalid sebelumnya
+    document.querySelectorAll('.field.is-invalid, .ind-row.is-invalid, .ttd-dropzone.is-invalid').forEach(function(el){
+      el.classList.remove('is-invalid');
+    });
+
+    var errors = [];
+    var firstEl = null;
+
+    function markError(inputEl, labelName){
+      if(!inputEl) return;
+      var f = inputEl.closest('.field');
+      if(f) f.classList.add('is-invalid');
+      errors.push(labelName + ' wajib diisi.');
+      if(!firstEl) firstEl = inputEl;
     }
 
-    var missing = INDIKATOR.filter(function(ind){ return !s.nilai[ind.key]; });
-    if(missing.length > 0){
-      confirmDialog({
-        title: 'Masih ada nilai kosong',
-        message: 'Ada ' + missing.length + ' indikator yang belum diberi nilai. Tetap ekspor PDF sekarang?',
-        okLabel: 'Tetap Ekspor',
-        cancelLabel: 'Periksa Lagi'
-      }).then(function(ok){ if(ok) doPrint(); });
-      return;
+    // 1. Validasi Identitas (Semua kolom pada Bagian I)
+    if(!id.nama) markError(els.inNama, 'Nama PM');
+    if(!id.pengasuh) markError(els.inPengasuh, 'Pengasuh Asrama');
+    if(!id.asrama) markError(els.inAsrama, 'Asrama');
+    if(!id.peksos) markError(els.inPeksos, 'Pekerja Sosial');
+    if(!id.masuk) markError(els.inMasuk, 'Tanggal Masuk');
+    if(!id.klaster) markError(els.inKlaster, 'Klaster PM');
+    if(!id.bulan) markError(els.inBulan, 'Bulan Penilaian');
+    if(!id.tahun) markError(els.inTahun, 'Tahun Penilaian');
+
+    // 2. Validasi Evaluasi Perkembangan PM Asrama (Semua 10 Indikator Wajib Dinilai)
+    var missingInd = INDIKATOR.filter(function(ind){ return !s.nilai[ind.key]; });
+    if(missingInd.length > 0){
+      missingInd.forEach(function(ind){
+        var row = document.querySelector('[data-row="' + ind.key + '"]');
+        if(row){
+          row.classList.add('is-invalid');
+          if(!firstEl) firstEl = row;
+        }
+      });
+      errors.push('Seluruh 10 indikator evaluasi perkembangan wajib dinilai (' + missingInd.length + ' indikator belum diisi).');
     }
+
+    // 3. Validasi Upload Tanda Tangan Pengasuh (Wajib di-upload)
+    if(!s.ttd.pengasuhImg){
+      if(els.ttdDropzone){
+        els.ttdDropzone.classList.add('is-invalid');
+        if(!firstEl) firstEl = els.ttdDropzone;
+      }
+      errors.push('Tanda tangan Pengasuh Asrama wajib di-upload.');
+    }
+
+    if(errors.length > 0){
+      toast(errors[0], 'warn', errors.length > 1 ? ('Cek ' + errors.length + ' Isian') : null, function(){
+        confirmDialog({
+          title: 'Formulir Belum Lengkap',
+          message: 'Silakan lengkapi data wajib berikut sebelum melanjutkan:\n\n• ' + errors.join('\n• '),
+          okLabel: 'Saya Lengkapi',
+          cancelLabel: ''
+        });
+      });
+
+      if(firstEl){
+        firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if(typeof firstEl.focus === 'function') firstEl.focus();
+      }
+      return false;
+    }
+
+    return true;
+  }
+
+  function startExport(){
+    if(!validateForm()) return;
     doPrint();
   }
 
@@ -615,6 +926,13 @@
   /* ---------- EVENTS ---------- */
   function bindEvents(){
     document.addEventListener('change', function(e){
+      if(e.target.matches('input[name^="nilai-"]')){
+        var row = e.target.closest('.ind-row');
+        if(row) row.classList.remove('is-invalid');
+      }
+      var field = e.target.closest('.field');
+      if(field) field.classList.remove('is-invalid');
+
       if(e.target.matches('input[name^="nilai-"]') ||
          e.target.matches('[data-keberfungsian]') ||
          e.target.matches('[data-tindak-lanjut]') ||
@@ -626,6 +944,9 @@
     });
 
     document.addEventListener('input', function(e){
+      var field = e.target.closest('.field');
+      if(field) field.classList.remove('is-invalid');
+
       if(e.target.matches('textarea, input[type="text"], input[type="date"], input[type="number"], select')){
         updateSummary();
         scheduleSave();
@@ -644,12 +965,80 @@
 
     els.previewClose.addEventListener('click', closePreview);
     els.previewCancel.addEventListener('click', closePreview);
-    els.previewExport.addEventListener('click', function(){ closePreview(); setTimeout(doPrint, 80); });
+    els.previewExport.addEventListener('click', function(){
+      if(!validateForm()){
+        closePreview();
+        return;
+      }
+      closePreview();
+      setTimeout(doPrint, 80);
+    });
     els.previewModal.addEventListener('click', function(e){ if(e.target === els.previewModal) closePreview(); });
 
     els.confirmOk.addEventListener('click', function(){ closeConfirm(true); });
     els.confirmCancel.addEventListener('click', function(){ closeConfirm(false); });
     els.confirmModal.addEventListener('click', function(e){ if(e.target === els.confirmModal) closeConfirm(false); });
+
+    /* Tanda tangan pengasuh: file upload, ganti, hapus, drag & drop, clipboard paste */
+    if(els.inTtdFile){
+      els.inTtdFile.addEventListener('change', function(e){
+        if(e.target.files && e.target.files[0]) handleTtdFile(e.target.files[0]);
+      });
+    }
+    if(els.btnReuploadTtd){
+      els.btnReuploadTtd.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        if(els.inTtdFile){
+          els.inTtdFile.value = '';
+          els.inTtdFile.click();
+        }
+      });
+    }
+    if(els.btnRemoveTtd){
+      els.btnRemoveTtd.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        clearPengasuhSignature(true);
+      });
+    }
+
+    if(els.ttdDropzone){
+      ['dragenter', 'dragover'].forEach(function(evt){
+        els.ttdDropzone.addEventListener(evt, function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          els.ttdDropzone.classList.add('drag-over');
+        });
+      });
+      ['dragleave', 'drop'].forEach(function(evt){
+        els.ttdDropzone.addEventListener(evt, function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          els.ttdDropzone.classList.remove('drag-over');
+        });
+      });
+      els.ttdDropzone.addEventListener('drop', function(e){
+        if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]){
+          handleTtdFile(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    document.addEventListener('paste', function(e){
+      if(e.clipboardData && e.clipboardData.items){
+        for(var i = 0; i < e.clipboardData.items.length; i++){
+          var item = e.clipboardData.items[i];
+          if(item.type && item.type.indexOf('image/') === 0){
+            var f = item.getAsFile();
+            if(f){
+              handleTtdFile(f);
+              break;
+            }
+          }
+        }
+      }
+    });
 
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape'){
@@ -688,6 +1077,13 @@
       ttdPeksos: $('ttd-peksos'),
       ttdPenanggung: $('ttd-penanggung'),
       ttdKapokja: $('ttd-kapokja'),
+      ttdPengasuhUploader: $('ttd-pengasuh-uploader'),
+      ttdDropzone: $('ttd-dropzone'),
+      inTtdFile: $('in-ttd-file'),
+      btnReuploadTtd: $('btn-reupload-ttd'),
+      ttdPreviewCard: $('ttd-preview-card'),
+      ttdPreviewImg: $('ttd-preview-img'),
+      btnRemoveTtd: $('btn-remove-ttd'),
 
       totalScore: $('total-score'),
       avgScore: $('avg-score'),

@@ -54,27 +54,27 @@
           <div class="grid-2">
             <div class="field">
               <label for="in-nama">Nama PM <span class="req">*</span></label>
-              <input id="in-nama" type="text" placeholder="Nama lengkap penerima manfaat" autocomplete="off">
+              <input id="in-nama" type="text" placeholder="Nama lengkap penerima manfaat" autocomplete="off" required>
             </div>
             <div class="field">
-              <label for="in-pengasuh">Pengasuh Asrama</label>
-              <input id="in-pengasuh" type="text" placeholder="Nama pengasuh asrama" autocomplete="off">
+              <label for="in-pengasuh">Pengasuh Asrama <span class="req">*</span></label>
+              <input id="in-pengasuh" type="text" placeholder="Nama pengasuh asrama" autocomplete="off" required>
             </div>
             <div class="field">
-              <label for="in-asrama">Asrama</label>
-              <input id="in-asrama" type="text" placeholder="Contoh: Asrama Anak Laki-laki" autocomplete="off">
+              <label for="in-asrama">Asrama <span class="req">*</span></label>
+              <input id="in-asrama" type="text" placeholder="Contoh: Asrama Anak Laki-laki" autocomplete="off" required>
             </div>
             <div class="field">
-              <label for="in-peksos">Pekerja Sosial</label>
-              <input id="in-peksos" type="text" placeholder="Nama pekerja sosial" autocomplete="off">
+              <label for="in-peksos">Pekerja Sosial <span class="req">*</span></label>
+              <input id="in-peksos" type="text" placeholder="Nama pekerja sosial" autocomplete="off" required>
             </div>
             <div class="field">
-              <label for="in-masuk">Tanggal Masuk</label>
-              <input id="in-masuk" type="date">
+              <label for="in-masuk">Tanggal Masuk <span class="req">*</span></label>
+              <input id="in-masuk" type="date" required>
             </div>
             <div class="field">
-              <label for="in-klaster">Klaster PM</label>
-              <input id="in-klaster" type="text" list="klaster-list" placeholder="Pilih atau tulis klaster" autocomplete="off">
+              <label for="in-klaster">Klaster PM <span class="req">*</span></label>
+              <input id="in-klaster" type="text" list="klaster-list" placeholder="Pilih atau tulis klaster" autocomplete="off" required>
               <datalist id="klaster-list">
                 <option value="ABH"></option>
                 <option value="Korban Ekstrimisme"></option>
@@ -91,8 +91,8 @@
               </datalist>
             </div>
             <div class="field">
-              <label for="in-bulan">Bulan Penilaian</label>
-              <select id="in-bulan">
+              <label for="in-bulan">Bulan Penilaian <span class="req">*</span></label>
+              <select id="in-bulan" required>
                 <option value="">-- Pilih Bulan --</option>
                 <option value="Januari">Januari</option>
                 <option value="Februari">Februari</option>
@@ -109,8 +109,8 @@
               </select>
             </div>
             <div class="field">
-              <label for="in-tahun">Tahun Penilaian</label>
-              <input id="in-tahun" type="number" min="2020" max="2100" placeholder="Contoh: 2026">
+              <label for="in-tahun">Tahun Penilaian <span class="req">*</span></label>
+              <input id="in-tahun" type="number" min="2020" max="2100" placeholder="Contoh: 2026" required>
             </div>
           </div>
         </div>
@@ -121,8 +121,8 @@
         <div class="card-head">
           <span class="step">II</span>
           <div>
-            <h2>Evaluasi Perkembangan PM Asrama</h2>
-            <p>Beri nilai 1&ndash;4 dan catatan perilaku &amp; intervensi</p>
+            <h2>Evaluasi Perkembangan PM Asrama <span class="req">*</span></h2>
+            <p>Beri nilai 1&ndash;4 pada seluruh 10 aspek (wajib diisi semua)</p>
           </div>
           <div class="mini-progress">
             <span id="mini-text">0/10</span>
@@ -190,8 +190,43 @@
         <div class="card-body">
           <div class="sign-grid">
             <div class="sign-field">
-              <label for="ttd-pengasuh">Pengasuh Asrama</label>
-              <input id="ttd-pengasuh" type="text" placeholder="Otomatis dari nama pengasuh" autocomplete="off">
+              <label for="ttd-pengasuh">Pengasuh Asrama <span class="req">*</span></label>
+              <input id="ttd-pengasuh" type="text" placeholder="Otomatis dari nama pengasuh" autocomplete="off" required>
+              
+              <div class="ttd-uploader" id="ttd-pengasuh-uploader">
+                <!-- Dropzone saat belum ada TTD -->
+                <div class="ttd-dropzone" id="ttd-dropzone" role="button" tabindex="0" title="Klik atau seret foto tanda tangan ke sini">
+                  <input type="file" id="in-ttd-file" accept="image/*" class="ttd-file-input" aria-label="Upload foto tanda tangan">
+                  <div class="ttd-dropzone-inner">
+                    <svg class="ttd-dropzone-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <div class="ttd-dropzone-text">
+                      <span class="ttd-dropzone-title">Upload Tanda Tangan Pengasuh <span class="req">*</span></span>
+                      <span class="ttd-dropzone-desc">Wajib diisi &middot; background otomatis dihapus</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Preview saat sudah ada TTD -->
+                <div class="ttd-preview-card" id="ttd-preview-card" style="display:none">
+                  <div class="ttd-preview-thumb">
+                    <img id="ttd-preview-img" alt="Pratinjau Tanda Tangan Pengasuh">
+                  </div>
+                  <div class="ttd-preview-meta">
+                    <span class="ttd-status-pill">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      Background Terhapus
+                    </span>
+                    <div class="ttd-preview-actions">
+                      <button type="button" class="btn-ttd-action" id="btn-reupload-ttd" title="Ganti foto tanda tangan">Ganti</button>
+                      <button type="button" class="btn-ttd-action btn-ttd-del" id="btn-remove-ttd" title="Hapus tanda tangan">Hapus</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="sign-field">
               <label for="ttd-peksos">Pekerja Sosial</label>
